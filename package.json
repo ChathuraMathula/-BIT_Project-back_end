@@ -1,0 +1,21 @@
+{
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
+    "mongodb": "^5.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  },
+  "name": "back-end",
+  "version": "1.0.0",
+  "description": "back-end code of date_reservation_system - BIT Project 2023",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon main"
+  },
+  "author": "chathura ekanayake",
+  "license": "ISC"
+}
