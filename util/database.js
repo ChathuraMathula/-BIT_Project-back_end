@@ -15,9 +15,13 @@ const uri =
 
 let _db;
 
-// This function makes a connection to the mongodb database and register a callback function
-// once the connection is successful.
-const connect = callback => {
+/* ----------------------------------------------------------------------------------------
+
+  This function makes a connection to the mongodb database and register a callback function
+  once the connection is successful. 
+ 
+ ------------------------------------------------------------------------------------------*/
+exports.connect = (callback) => {
   MongoClient.connect(uri)
     .then((client) => {
       console.log("Successfully connected to MongoDB");
@@ -30,13 +34,68 @@ const connect = callback => {
     });
 };
 
-// This function returns the database which is connected to
-const getDb = () => {
+/* ----------------------------------------------------------------------------------------
+
+  This function returns the database which is connected to
+ 
+ ------------------------------------------------------------------------------------------*/
+exports.getDb = () => {
   if (_db) {
     return _db;
   }
   throw "No Database Found !";
 };
 
-exports.connect = connect;
-exports.getDb = getDb;
+/* ----------------------------------------------------------------------------------------
+  getCollection(); returns a Promise resolving an Array of documents
+
+  This function returns An array of documents from a collection based on the query and 
+  options provided. By default it gets all the documents in a collection without document _id.
+ 
+ ------------------------------------------------------------------------------------------*/
+
+exports.getCollection = async (
+  collection,
+  query = {},
+  options = {
+    projection: {
+      _id: 0,
+    },
+  }
+) => {
+  const db = this.getDb();
+  const documents = db.collection(collection);
+
+  const documentsArray = await documents.find(query, options).toArray();
+  return documentsArray;
+};
+
+/* END getCollection() ----------------------------------------------------------------------------- */
+
+
+/* ---------------------------------------------------------------------------------------------------
+  getDocument(); returns a Promise resolving an object of document
+
+  This function returns an object of document from a collection based on the query and 
+  options provided.
+ 
+-----------------------------------------------------------------------------------------------------*/
+
+exports.getDocument = async (
+  collection,
+  query = {},
+  options = {
+    projection: {
+      _id: 0,
+    },
+  }
+) => {
+  const db = this.getDb();
+
+  const documents = db.collection(collection);
+
+  const document = await documents.findOne(query, options);
+  return document;
+};
+
+/* END getDocument() ------------------------------------------------------------------------------- */

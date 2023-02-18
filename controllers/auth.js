@@ -1,103 +1,40 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const { use, options } = require("../routes/post");
-const { query } = require("express");
-const getDb = require("../util/database").getDb;
+const database = require("../util/database");
 
-const JWT_SECRET = "my_secret";
+const JWT_SECRET = "my_secret"; /* Secret key to generate jwt token */
 
-exports.signup = async (req, res, next) => {
-  try {
-    Users = getDb().collection("users");
-    const {
-      username,
-      password,
-      firstname,
-      lastname,
-      email,
-      phone_no,
-      postal_address,
-    } = req.body;
-
-    if (
-      !(
-        username &&
-        password &&
-        firstname &&
-        lastname &&
-        email &&
-        phone_no &&
-        postal_address
-      )
-    ) {
-      res.status(400).json({ message: "All fields required" });
-      return next();
-    }
-
-    const oldUser = await Users.findOne({ username: username });
-    if (oldUser) {
-      res.status(400).json({ message: "This username already exists" });
-      return next();
-    }
-
-    const encryptedPassword = await bcrypt.hash(password, 12);
-
-    const user = await Users.insertOne({
-      username: username,
-      password: encryptedPassword,
-      firstname: firstname,
-      lastname: lastname,
-      email: email,
-      phone_no: phone_no,
-      postal_address: postal_address,
-      role: "customer",
-    });
-
-    const token = jwt.sign(
-      { username: user.username, role: user.role },
-      JWT_SECRET,
-      { expiresIn: "1h" }
-    );
-
-    res.status(200).json(token);
-  } catch (error) {
-    console.log(error);
-  }
+/* ------------------ generateJwtToken() = Function to generate jwt token -------------------------- */
+const generateJwtToken = (payload) => {
+  return jwt.sign(payload, JWT_SECRET, { expiresIn: "2h" });
 };
+/* --------------------------- generateJwtToken() END ---------------------------------------------- */
 
+/* ------------------ login() = Function to send a jwt token when login ---------------------------- */
 exports.login = async (req, res, next) => {
   try {
-    const { username, password } = req.body;
+    const { username, password } = req.body; // destructure username & password from request body
 
-    if (!(username && password)) {
-      res.status(400).json({ message: "All input is required" });
-      return next();
-    }
+    // get matched user
+    const user = await database.getDocument(
+      "users",
+      { username, password },
+      { projection: { username: 1, password: 1, role: 1, _id: 0 } }
+    );
 
-    const Users = getDb().collection("users");
-
-    const query = { username: username };
-    const options = {
-      projection: {
-        username: 1,
-        password: 1,
-        role: 1,
-      },
-    };
-    const user = await Users.findOne(query, options);
-
-    if (user && (await bcrypt.compare(password, user.password))) {
-      const token = jwt.sign(
-        { username: user.username, role: user.role },
-        JWT_SECRET,
-        { expiresIn: "1h" }
-      );
-
-      res.status(200).json({ message: 'login successful', token });
-      return next();
-    }
-    res.status(400).json({message: 'Invalid username or password'});
+    // generate a jwt token if user exists in the database
+    if (user) {
+      const jwtToken = generateJwtToken(user);
+      if (jwtToken) {
+        res.status(200).json({ token: jwtToken }); // status code 200 = Ok
+      }
+    } else {
+      res.status(401).send(); // status code 401 = Unauthorized 
+    } 
   } catch (err) {
-    console.log("error",err);
+    console.log(err);
+    res.status(401).send();
   }
+  return next();
 };
+/* ------------------------------------- login() END ----------------------------------------------- */

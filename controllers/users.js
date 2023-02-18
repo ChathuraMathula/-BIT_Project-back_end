@@ -1,11 +1,6 @@
-const Admin = require("../models/users/Admin");
+const Users = require("../models/users/Users");
 
-// fetch admin user from database and pass them to /users/admin API endpoint
-exports.getAdminUser = (req, res, next) => {
-  Admin.fetch().then(result => res.json(result));
-};
-
-// update admin user password
-exports.updateAdminPasswd = (req, res, next) => {
-  Admin.updatePasswd("new").then(result => console.log(result));
+// fetch array of users documents from the database
+exports.getUsers = (req, res, next) => {
+  Users.fetchUsers().then(result => res.json(result));
 };
