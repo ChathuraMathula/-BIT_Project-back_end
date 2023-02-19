@@ -26,11 +26,19 @@ exports.login = async (req, res, next) => {
     if (user) {
       const jwtToken = generateJwtToken(user);
       if (jwtToken) {
-        res.status(200).json({ token: jwtToken }); // status code 200 = Ok
+        // send token as a httpOnly cookie
+        res
+          .status(200)
+          .cookie("token", "bearer " + jwtToken, {
+            httpOnly: true,
+            expires: new Date(Date.now() + 900000),
+          })
+          .send();
       }
     } else {
-      res.status(401).send(); // status code 401 = Unauthorized 
-    } 
+      // status code 401 = Unauthorized and clear the httpOnly cookie named "token"
+      res.status(401).clearCookie("token").send();
+    }
   } catch (err) {
     console.log(err);
     res.status(401).send();
@@ -38,3 +46,25 @@ exports.login = async (req, res, next) => {
   return next();
 };
 /* ------------------------------------- login() END ----------------------------------------------- */
+
+
+/* --------------- verifyToken() = Function to verify token --------------------------------------- */
+
+exports.verifyToken = (req, res, next) => {
+  const token = req.cookies?.token; // extract the token if available
+
+  if (token) {
+    jwt.verify(token, JWT_SECRET, (error, authData) => {
+      if (error) {
+        res.status(403).send(); // status code = forbidden if token is changed
+      } else {
+        req.authData = authData;
+        console.log("auth.js -- verifyToken() => ", authData);
+      }
+    });
+  } else {
+    res.status(401).send(); // status code = unauthorized if token is not found
+  }
+  return next();
+};
+/* ------------------------------------- verifyToken() END --------------------------------------- */
