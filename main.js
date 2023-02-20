@@ -1,15 +1,19 @@
 const express = require("express");
-const cookieParser = require("cookie-parser");
-
 const app = express();
+
+const multer = require('multer');
+const upload = multer();
+const cookieParser = require("cookie-parser");
 
 const database = require("./util/database");
 
 const getRoutes = require("./routes/get");
 const postRoutes = require("./routes/post");
 
-app.use(cookieParser());
-app.use(express.json());
+app.use(cookieParser()); // parse cookies
+app.use(express.json()); // parse "application/json"
+app.use(upload.none()); // parse "multipart/form-data"
+
 // app.use(express.urlencoded({ extended: true }));
 
 // Setting CORS headers

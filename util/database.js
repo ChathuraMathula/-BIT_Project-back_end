@@ -82,7 +82,7 @@ exports.getCollection = async (
 
 exports.getDocument = async (
   collection,
-  query = {},
+  query,
   options = {
     projection: {
       _id: 0,

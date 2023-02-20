@@ -23,7 +23,7 @@ const multerFilter = (req, file, callback) => {
 };
 
 // calling the multer function
-exports.uploadProfilePhoto = multer({
+exports.UploadProfilePhoto = multer({
     storage: multerStorage,
-    fileFilter: multerFilter
+    fileFilter: multerFilter,
 });

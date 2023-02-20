@@ -9,8 +9,9 @@ const Users = require("../models/users/Users");
 exports.signup = (req, res, next) => {
   const newCustomer = new Customer(req.body); // create a customer instance
 
+  console.log("BODY: ", req.body);
   // if a profile picture is uploaded
-  if (req.filename && req.file.fieldname === "profilePicture") {
+  if (req.file && req.file.fieldname === "profilePicture") {
     const imageFile = req.file;
 
     // add profile picture details (name, url) to the database
@@ -19,9 +20,9 @@ exports.signup = (req, res, next) => {
       url: `http:localhost:3001/users/profile/photo/${imageFile.filename}`,
     };
   }
+  console.log(req.file)
   newCustomer.save().then(
     (resolve) => {
-      console.log(`resolve: `, resolve);
       // if document is successfully stored in the collection
       if (resolve) {
         console.log(
@@ -34,12 +35,13 @@ exports.signup = (req, res, next) => {
       }
     },
     (reject) => {
+      // if the customer data not valid send 400 status code to the frontend
       if (reject === "invalidCustomerData") {
-        console.log("Reject: ", reject);
         res.status(400).json({
           message: "Registration Faild.",
         });
       } else {
+        // if the database error happens status code 500 = internal server error is sent.
         res.status(500).json({
           message: "Registration Faild.",
         });
