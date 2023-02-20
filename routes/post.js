@@ -2,7 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 
-const uploadProfilePhoto = require('../middleware/uploadProfilePhoto').uploadProfilePhoto;
+const UploadProfilePhoto = require('../middleware/UploadProfilePhoto').uploadProfilePhoto;
 
 const usersController = require('../controllers/users');
 const authController = require('../controllers/auth');
@@ -13,7 +13,7 @@ router.post('/login', authController.login);
 
 // POST /users
 // API endpoint to register users (customers)
-router.post('/users', uploadProfilePhoto.single('image'), usersController.signup);
+router.post('/users', UploadProfilePhoto.single('profilePicture'), usersController.signup);
 
 
 module.exports = router;

@@ -72,7 +72,6 @@ exports.getCollection = async (
 
 /* END getCollection() ----------------------------------------------------------------------------- */
 
-
 /* ---------------------------------------------------------------------------------------------------
   getDocument(); returns a Promise resolving an object of document
 
@@ -99,3 +98,22 @@ exports.getDocument = async (
 };
 
 /* END getDocument() ------------------------------------------------------------------------------- */
+
+/* ---------------------------------------------------------------------------------------------------
+  postDocument(); post a doucument to the database based on the given collection and document
+
+  This function returns an object with _id if the given document is successfully stored in the
+  given collection.
+ 
+-----------------------------------------------------------------------------------------------------*/
+
+exports.postDocument = async (collection, document) => {
+  const db = this.getDb();
+
+  const collectionName = db.collection(collection);
+
+  const result = await collectionName.insertOne(document);
+  return result;
+};
+
+/* END postDocument() ------------------------------------------------------------------------------- */
