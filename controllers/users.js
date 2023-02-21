@@ -17,7 +17,7 @@ exports.signup = (req, res, next) => {
     // add profile picture details (name, url) to the database
     newCustomer.profilePicture = {
       name: imageFile.filename,
-      url: `http:localhost:3001/users/profile/photo/${imageFile.filename}`,
+      url: `users/profile/photo/${imageFile.filename}`,
     };
   }
   console.log(req.file)
@@ -55,3 +55,8 @@ exports.signup = (req, res, next) => {
 exports.getUsers = (req, res, next) => {
   Users.fetchUsers().then((result) => res.json(result));
 };
+
+exports.getUserProfilePic = (req, res, next) => {
+  console.log("Authentication Payload: ", req.authData);
+  res.send("get user profile picture");
+}

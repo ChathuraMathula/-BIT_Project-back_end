@@ -41,12 +41,12 @@ exports.login = async (req, res, next) => {
       return;
     })
     .then(() => {
-      const jwtToken = generateJwtToken(user);
+      const jwtToken = generateJwtToken({username: user.username, role: user.role});
       if (jwtToken) {
         // send token as a httpOnly cookie
         res
           .status(200)
-          .cookie("token", "bearer " + jwtToken, {
+          .cookie("token", jwtToken, {
             httpOnly: true,
             expires: new Date(Date.now() + 900000),
           })
@@ -55,10 +55,10 @@ exports.login = async (req, res, next) => {
               name: user.username,
               role: user.role,
             },
-            message: "Login Successful.",
           });
+      } else {
+        throw "password_not_matched";
       }
-      return;
     })
     .catch((error) => {
       if (error) {
