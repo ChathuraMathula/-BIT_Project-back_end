@@ -72,8 +72,8 @@ exports.getCollection = async (
 
 /* END getCollection() ----------------------------------------------------------------------------- */
 
-/* ---------------------------------------------------------------------------------------------------
-  getDocument(); returns a Promise resolving an object of document
+/**  ---------------------------------------------------------------------------------------------------
+  getDocument(collection, query, options); returns a Promise resolving an object of document
 
   This function returns an object of document from a collection based on the query and 
   options provided.

@@ -1,5 +1,7 @@
 const Customer = require("../models/users/Customer");
 const Users = require("../models/users/Users");
+const path = require("path");
+const fs = require("fs");
 
 /** ==============================================================================================
  * 
@@ -14,13 +16,13 @@ exports.signup = (req, res, next) => {
   if (req.file && req.file.fieldname === "profilePicture") {
     const imageFile = req.file;
 
-    // add profile picture details (name, url) to the database
+    // attach profile picture details (name, url) to the user document
     newCustomer.profilePicture = {
       name: imageFile.filename,
-      url: `users/profile/photo/${imageFile.filename}`,
+      url: `http:localhost:3001/users/user/profile/photo/${imageFile.filename}`,
     };
   }
-  console.log(req.file)
+  console.log(req.file);
   newCustomer.save().then(
     (resolve) => {
       // if document is successfully stored in the collection
@@ -58,5 +60,51 @@ exports.getUsers = (req, res, next) => {
 
 exports.getUserProfilePic = (req, res, next) => {
   console.log("Authentication Payload: ", req.authData);
-  res.send("get user profile picture");
-}
+
+  Users.fetchUser({ username: req.authData.username })
+    .then((user) => {
+      console.log("User: ", user)
+      if (user.profilePicture) {
+        return user.profilePicture.name;
+      }
+    }).then(profilePicName => {
+      let filePath = path.join(
+        __dirname,
+        "../static/images/users/profile/",
+        profilePicName
+      );
+    
+      console.log("Profile Picture Name: ", profilePicName);
+      console.log("file path: ", filePath)
+      let mimetype = path.extname(filePath);
+      console.log("Mime type: ", mimetype);
+    
+      let contentType = "text/html";
+    
+      switch (mimetype) {
+        case "png":
+          contentType = "image/png";
+          break;
+        case "jpeg":
+          contentType = "image/jpeg";
+          break;
+      }
+    
+      fs.readFile(filePath, (error, data) => {
+        if (error) {
+          console.log("Error: ", error)
+        };
+    
+        res.writeHead(200, { "Content-Type": contentType });
+        res.end(data, "utf8")
+      });
+    })
+    .catch((err) => {
+      if (err) {
+        console.log("Profile Picture Error: ", err);
+      }
+    });
+
+  
+  // res.send("get user profile picture");
+};
