@@ -12,7 +12,7 @@ const postRoutes = require("./routes/post");
 
 app.use(cookieParser()); // parse cookies
 app.use(express.json()); // parse "application/json"
-app.use(upload.none()); // parse "multipart/form-data"
+// app.use(upload.none()); // parse "multipart/form-data"
 
 // app.use(express.urlencoded({ extended: true }));
 

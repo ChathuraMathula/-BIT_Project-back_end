@@ -3,17 +3,18 @@ const Users = require("../models/users/Users");
 const path = require("path");
 const fs = require("fs");
 
-/** ==============================================================================================
+/**
  * 
- *    signup(req, res, next) handles customer signup tasks
- * 
-=================================================================================================*/
+ * @param {object} req
+ * @param {object} res 
+ * @param {callback} next 
+ */
 exports.signup = (req, res, next) => {
   const newCustomer = new Customer(req.body); // create a customer instance
 
   console.log("BODY: ", req.body);
   // if a profile picture is uploaded
-  if (req.file && req.file.fieldname === "profilePicture") {
+  if (req.file && req.file.fieldname === "image") {
     const imageFile = req.file;
 
     // attach profile picture details (name, url) to the user document

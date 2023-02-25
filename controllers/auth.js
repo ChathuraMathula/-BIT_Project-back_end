@@ -72,56 +72,18 @@ exports.login = async (req, res, next) => {
         }
       }
     });
+    
+  };
+  /* ------------------------------------- login() END ----------------------------------------------- */
+  
+  /* ----------------------------------- logout(); --------------------------------------------- */
 
-  /** ======================================================================================== */
-  // console.log("REQ Body: ", req.body);
-  // // get matched user
-  // await database
-  //   .getDocument(
-  //     "users",
-  //     { username: username },
-  //     { projection: { username: 1, password: 1, role: 1, _id: 0 } }
-  //   )
-  //   .then((user) => {
-  //     // generate a jwt token if user exists in the database
-  //     if (user) {
-  //       console.log(user);
-  //       comparePasswords(password, user.password).then(
-  //         (isPasswordConfirmed) => {
-  //           console.log("pasword confirmed = ", isPasswordConfirmed);
-  //           if (isPasswordConfirmed) {
-  //             const jwtToken = generateJwtToken(user);
-  //             if (jwtToken) {
-  //               // send token as a httpOnly cookie
-  //               res
-  //                 .status(200)
-  //                 .cookie("token", "bearer " + jwtToken, {
-  //                   httpOnly: true,
-  //                   expires: new Date(Date.now() + 900000),
-  //                 })
-  //                 .json({
-  //                   user: {
-  //                     name: user.username,
-  //                     role: user.role,
-  //                   },
-  //                 });
-  //             }
-  //           } else {
-  //             // status code 401 = Unauthorized and clear the httpOnly cookie named "token"
-  //             res
-  //               .status(401)
-  //               .clearCookie("token")
-  //               .json({ message: "Unauthorized. Password did not match." });
-  //           }
-  //         }
-  //       );
-  //     } else {
-  //       // status code 401 = Unauthorized and clear the httpOnly cookie named "token"
-  //       res
-  //         .status(401)
-  //         .clearCookie("token")
-  //         .json({ message: "Unauthorized" });
-  //     }
-  //   });
-};
-/* ------------------------------------- login() END ----------------------------------------------- */
+  exports.logout = (req, res, next) => {
+    if (req.authData.username) {
+      res.status(200).clearCookie("token").send();
+    } else {
+      res.send(500).send();
+    }
+  }
+
+  /* ------------------------------------ END logout(); ----------------------------------------- */
