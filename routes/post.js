@@ -17,15 +17,18 @@ router.post("/login", upload.none(), authController.login);
 // API endpoint to logout users
 router.post("/logout", verifyToken, authController.logout);
 
+// POST /user
+// API endpoint get requested user document
+router.post("/user", verifyToken, upload.none(), usersController.getUser);
 
 // POST /user/update
 // API endpoint update user document
 router.post(
-    "/user/update",
-    UploadProfilePhoto.single("image"),
-    verifyToken,
-    usersController.updateUser
-  );
+  "/user/update",
+  UploadProfilePhoto.single("image"),
+  verifyToken,
+  usersController.updateUser
+);
 
 // POST /users
 // API endpoint to register users (customers)
@@ -33,6 +36,15 @@ router.post(
   "/users",
   UploadProfilePhoto.single("image"),
   usersController.signup
+);
+
+// POST /users/user/profile/picture
+// API endpoint to get users profile pictures from file system based on username
+router.post(
+  "/users/user/profile/picture",
+  verifyToken,
+  upload.none(),
+  usersController.getUserProfilePic
 );
 
 module.exports = router;

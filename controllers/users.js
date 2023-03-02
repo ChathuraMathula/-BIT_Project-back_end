@@ -61,7 +61,8 @@ exports.getUsers = (req, res, next) => {
 };
 
 exports.getUserProfilePic = (req, res, next) => {
-  Users.fetchUser({ username: req.authData.username })
+  console.log("=+=+=> body : ", req.body)
+  Users.fetchUser({ username: req.body.username })
     .then((user) => {
       if (user.profilePicture) {
         return user.profilePicture.name;
@@ -110,7 +111,6 @@ exports.getUserProfilePic = (req, res, next) => {
             "profilePicture.svg"
           ),
           (error, data) => {
-            console.log("Profile Picture Data: ", data);
             if (!error) {
               res.writeHead(200, { "Content-Type": "image/svg+xml" });
               res.end(data, "utf8");
@@ -134,6 +134,23 @@ exports.getVerifiedUser = (req, res, next) => {
     .catch((error) => {
       if (error) {
         console.log("Get Verified User - ERROR: ", error);
+        res.status(401).send();
+      }
+    });
+};
+
+exports.getUser = (req, res, next) => {
+  console.log("get user ====> ", req.body)
+  Users.fetchUser({ username: req.body.username })
+    .then((user) => {
+      if (user) {
+        res.status(200).json(user);
+      } else {
+        throw "error";
+      }
+    })
+    .catch((error) => {
+      if (error) {
         res.status(401).send();
       }
     });
