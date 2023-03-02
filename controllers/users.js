@@ -3,6 +3,8 @@ const Users = require("../models/users/Users");
 const path = require("path");
 const fs = require("fs");
 const { comparePasswords, toHashPassword } = require("../util/password");
+const { sanitize } = require("../util/sanitizer");
+const { isValid } = require("../util/validator");
 
 /**
  *
@@ -61,7 +63,6 @@ exports.getUsers = (req, res, next) => {
 };
 
 exports.getUserProfilePic = (req, res, next) => {
-  console.log("=+=+=> body : ", req.body)
   Users.fetchUser({ username: req.body.username })
     .then((user) => {
       if (user.profilePicture) {
@@ -140,7 +141,6 @@ exports.getVerifiedUser = (req, res, next) => {
 };
 
 exports.getUser = (req, res, next) => {
-  console.log("get user ====> ", req.body)
   Users.fetchUser({ username: req.body.username })
     .then((user) => {
       if (user) {
@@ -154,6 +154,123 @@ exports.getUser = (req, res, next) => {
         res.status(401).send();
       }
     });
+};
+
+/**
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns sends a {success} object as json if user contact details are updated successfully.
+ * else sends {error} object as json.
+ */
+exports.updateUserContactDetails = async (req, res, next) => {
+  if (req.body) {
+    const username = sanitize(req.body.username);
+    const email = sanitize(req.body.email);
+    const phoneNo = sanitize(req.body.phoneNo);
+    const address = sanitize(req.body.address);
+
+    if (
+      isValid("username", username) &&
+      isValid("email", email) &&
+      isValid("phoneNo", phoneNo) &&
+      isValid("address", address)
+    ) {
+      const filter = { username: username };
+      const updateFilter = {
+        $set: {
+          email: email,
+          phoneNo: phoneNo,
+          address: address,
+        },
+      };
+
+      await Users.updateUser(filter, updateFilter)
+        .then((result) => {
+          if (result) {
+            if (result.modifiedCount > 0) {
+              res.status(200).json({ success: "Saved successfully... 😎" });
+            } else if (result.modifiedCount === 0) {
+              res.status(200).json({ success: "You have already saved... 😅" });
+            }
+          } else {
+            throw "error";
+          }
+        })
+        .catch((error) => {
+          if (error) {
+            res.status(400).json({ error: "Sorry...! 😟 Save failed." });
+          }
+        });
+    } else {
+      res.status(400).json({ error: "Invalid data... 😣" });
+    }
+  }
+};
+
+exports.updateUserPassword = async (req, res, next) => {
+  if (req.body) {
+    console.log("===========>> ", req.body)
+    const username = sanitize(req.body.username);
+    const oldPassword = sanitize(req.body.oldPassword);
+    const newPassword = sanitize(req.body.newPassword);
+
+    if (
+      isValid("username", username) &&
+      isValid("password", oldPassword) &&
+      isValid("password", newPassword)
+    ) {
+      const query = { username: username };
+      const options = {
+        projection: {
+          password: 1,
+        },
+      };
+      const isPasswordCorrect = await Users.fetchUser(query, options)
+        .then((user) => user.password)
+        .then((password) => {
+          return comparePasswords(oldPassword, password);
+        })
+        .catch((error) => {
+          if (error) return false;
+        });
+
+      console.log("___-----> ", isPasswordCorrect);
+
+      if (isPasswordCorrect) {
+        const filter = { username: username };
+        const updateFilter = {
+          $set: {
+            password: await toHashPassword(newPassword),
+          },
+        };
+
+        await Users.updateUser(filter, updateFilter)
+          .then((result) => {
+            if (result) {
+              if (result.modifiedCount > 0) {
+                res.status(200).json({ success: "Password changed... 😎" });
+              } else if (result.modifiedCount === 0) {
+                res
+                  .status(200)
+                  .json({ success: "You have already saved... 😅" });
+              }
+            } else {
+              throw "error";
+            }
+          })
+          .catch((error) => {
+            if (error) {
+              res.status(400).json({ error: "Sorry...! 😟 Save failed." });
+            }
+          });
+      } else {
+        res.status(400).json({ error: "Incorrect old password... 😣" });
+      }
+    } else {
+      res.status(400).json({ error: "Invalid data... 😣" });
+    }
+  }
 };
 
 exports.updateUser = async (req, res, next) => {

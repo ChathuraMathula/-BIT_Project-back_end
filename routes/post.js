@@ -17,9 +17,31 @@ router.post("/login", upload.none(), authController.login);
 // API endpoint to logout users
 router.post("/logout", verifyToken, authController.logout);
 
-// POST /user
-// API endpoint get requested user document
-router.post("/user", verifyToken, upload.none(), usersController.getUser);
+// POST /user/update/contact/details
+// API endpoint update user document
+router.post(
+  "/user/update/contact/details",
+  verifyToken,
+  upload.none(),
+  usersController.updateUserContactDetails
+);
+
+// POST /user/update/contact/details
+// API endpoint update user document
+router.post(
+  "/user/update/password",
+  verifyToken,
+  upload.none(),
+  usersController.updateUserPassword
+);
+
+// POST /users
+// API endpoint to register users (customers)
+router.post(
+  "/users",
+  UploadProfilePhoto.single("image"),
+  usersController.signup
+);
 
 // POST /user/update
 // API endpoint update user document
@@ -30,13 +52,9 @@ router.post(
   usersController.updateUser
 );
 
-// POST /users
-// API endpoint to register users (customers)
-router.post(
-  "/users",
-  UploadProfilePhoto.single("image"),
-  usersController.signup
-);
+// POST /user
+// API endpoint get requested user document
+router.post("/user", verifyToken, upload.none(), usersController.getUser);
 
 // POST /users/user/profile/picture
 // API endpoint to get users profile pictures from file system based on username
