@@ -28,7 +28,7 @@ exports.login = async (req, res, next) => {
     )
     .then((userDocument) => {
       if (!userDocument) {
-        throw "no_such_user";
+        throw "error";
       } else {
         user = userDocument;
         return comparePasswords(password, userDocument.password);
@@ -36,19 +36,22 @@ exports.login = async (req, res, next) => {
     })
     .then((isPasswordConfirmed) => {
       if (!isPasswordConfirmed) {
-        throw "password_not_matched";
+        throw "error";
       }
       return;
     })
     .then(() => {
-      const jwtToken = generateJwtToken({username: user.username, role: user.role});
+      const jwtToken = generateJwtToken({
+        username: user.username,
+        role: user.role,
+      });
       if (jwtToken) {
         // send token as a httpOnly cookie
         res
           .status(200)
           .cookie("token", jwtToken, {
             httpOnly: true,
-            expires: new Date(Date.now() + 900000),
+            expires: new Date(Date.now() + 9000000),
           })
           .json({
             user: {
@@ -57,33 +60,35 @@ exports.login = async (req, res, next) => {
             },
           });
       } else {
-        throw "password_not_matched";
+        throw "error";
       }
     })
     .catch((error) => {
       if (error) {
         console.log("Login Error", error);
-        if (error === "no_such_user") {
-          res.status(401).json({ message: "No Such User Found." });
-        } else if (error === "password_not_matched") {
-          res.status(401).json({ message: "Password did not match." });
-        } else {
-          res.status(500).json({ message: "Internal Server Error" });
+        if (error === "error") {
+          res
+            .status(401)
+            .json({
+              error:
+                "Login Error..! 😣 Username or password incorrect. Please Try Again.",
+            });
         }
       }
     });
-    
-  };
-  /* ------------------------------------- login() END ----------------------------------------------- */
-  
-  /* ----------------------------------- logout(); --------------------------------------------- */
+};
+/* ------------------------------------- login() END ----------------------------------------------- */
 
-  exports.logout = (req, res, next) => {
-    if (req.authData.username) {
-      res.status(200).clearCookie("token").send();
-    } else {
-      res.send(500).send();
-    }
+/* ----------------------------------- logout(); --------------------------------------------- */
+
+exports.logout = (req, res, next) => {
+  console.log("logout: ", req.body);
+  console.log("logout authData.username: ", req.authData.username);
+  if (req.authData.username) {
+    res.status(200).clearCookie("token").send();
+  } else {
+    res.send(500).send();
   }
+};
 
-  /* ------------------------------------ END logout(); ----------------------------------------- */
+/* ------------------------------------ END logout(); ----------------------------------------- */

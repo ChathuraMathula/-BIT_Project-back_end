@@ -86,6 +86,7 @@ exports.getDocument = async (
   options = {
     projection: {
       _id: 0,
+      password: 0,
     },
   }
 ) => {
@@ -117,3 +118,19 @@ exports.postDocument = async (collection, document) => {
 };
 
 /* END postDocument() ------------------------------------------------------------------------------- */
+
+/**
+ * 
+ * @param {string} collection The collection name eg: "users"
+ * @param {object} filter The filter is used to select the document to update
+ * @param {object} updateFilter The update operations to be applied to the document
+ * @returns A promise resolving the result of the update operation
+ */
+exports.updateDocument = async (collection, filter, updateFilter) => {
+  const db = this.getDb();
+
+  const documents = db.collection(collection);
+
+  const result = await documents.updateOne(filter, updateFilter);
+  return result;
+};

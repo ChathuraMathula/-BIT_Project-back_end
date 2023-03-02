@@ -14,7 +14,7 @@ exports.verifyToken = (req, res, next) => {
         res.status(403).send(); // status code = forbidden if token is changed
       } else {
         req.authData = authData;
-        console.log("auth.js -- verifyToken() => ", authData);
+        console.log("authData ", authData);
       }
     });
   } else {

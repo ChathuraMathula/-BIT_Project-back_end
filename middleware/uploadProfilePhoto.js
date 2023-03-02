@@ -8,7 +8,8 @@ const multerStorage = multer.diskStorage({
     },
     filename: (req, file, callback) => {
         const ext = file.mimetype.split('/')[1];
-        callback(null, `${req.body.username}.${ext}`);
+        // callback(null, `${req.body.username}.${ext}`);
+        callback(null, `${req.body.username}.jpeg`);
     }
 });
 
