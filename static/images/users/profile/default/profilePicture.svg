@@ -1,0 +1,47 @@
+<svg id="Component_1_1" data-name="Component 1 – 1" xmlns="http://www.w3.org/2000/svg" width="539" height="539.5" viewBox="0 0 539 539.5">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #000a1a;
+        stroke: #000a1a;
+      }
+
+      .cls-2, .cls-6 {
+        fill: none;
+      }
+
+      .cls-2, .cls-3, .cls-4 {
+        stroke: #adc2eb;
+      }
+
+      .cls-2 {
+        stroke-width: 4px;
+      }
+
+      .cls-3, .cls-4 {
+        fill: #adc2eb;
+      }
+
+      .cls-3 {
+        stroke-linecap: round;
+      }
+
+      .cls-5 {
+        stroke: none;
+      }
+    </style>
+  </defs>
+  <g id="Rectangle_25" data-name="Rectangle 25" class="cls-1">
+    <rect class="cls-5" width="539" height="539"/>
+    <rect class="cls-6" x="0.5" y="0.5" width="538" height="538"/>
+  </g>
+  <g id="Rectangle_26" data-name="Rectangle 26" class="cls-2">
+    <rect class="cls-5" width="539" height="539" rx="269.5"/>
+    <rect class="cls-6" x="2" y="2" width="535" height="535" rx="267.5"/>
+  </g>
+  <rect id="Rectangle_27" data-name="Rectangle 27" class="cls-3" width="331" height="258" rx="129" transform="translate(104 281)"/>
+  <g id="Ellipse_4" data-name="Ellipse 4" class="cls-4" transform="translate(197 125)">
+    <circle class="cls-5" cx="72.5" cy="72.5" r="72.5"/>
+    <circle class="cls-6" cx="72.5" cy="72.5" r="72"/>
+  </g>
+</svg>

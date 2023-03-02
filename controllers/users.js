@@ -65,40 +65,58 @@ exports.getUserProfilePic = (req, res, next) => {
     .then((user) => {
       if (user.profilePicture) {
         return user.profilePicture.name;
+      } else {
+        throw "error";
       }
     })
     .then((profilePicName) => {
-      let filePath = path.join(
-        __dirname,
-        "../static/images/users/profile/",
-        profilePicName
-      );
+      if (profilePicName) {
+        let filePath = path.join(
+          __dirname,
+          "../static/images/users/profile/",
+          profilePicName
+        );
 
-      let mimetype = path.extname(filePath);
+        let mimetype = path.extname(filePath);
 
-      let contentType = "text/html";
+        let contentType = "text/html";
 
-      switch (mimetype) {
-        case "png":
-          contentType = "image/png";
-          break;
-        case "jpeg":
-          contentType = "image/jpeg";
-          break;
-      }
-
-      fs.readFile(filePath, (error, data) => {
-        if (error) {
-          console.log("Error: ", error);
+        switch (mimetype) {
+          case "png":
+            contentType = "image/png";
+            break;
+          case "jpeg":
+            contentType = "image/jpeg";
+            break;
         }
 
-        res.writeHead(200, { "Content-Type": contentType });
-        res.end(data, "utf8");
-      });
+        fs.readFile(filePath, (error, data) => {
+          if (!error) {
+            res.writeHead(200, { "Content-Type": contentType });
+            res.end(data, "utf8");
+          }
+        });
+      } else {
+        throw "error";
+      }
     })
-    .catch((err) => {
-      if (err) {
-        console.log("Profile Picture Error: ", err);
+    .catch((error) => {
+      if (error) {
+        console.log("Profile Picture Error: ", error);
+        fs.readFile(
+          path.join(
+            __dirname,
+            "../static/images/users/profile/default/",
+            "profilePicture.svg"
+          ),
+          (error, data) => {
+            console.log("Profile Picture Data: ", data);
+            if (!error) {
+              res.writeHead(200, { "Content-Type": "image/svg+xml" });
+              res.end(data, "utf8");
+            }
+          }
+        );
       }
     });
 };
@@ -193,23 +211,23 @@ exports.updateUser = async (req, res, next) => {
             // res.status(200).json({ message: responseMsg });
           }
         });
+    }
+    console.log("Password Added: ", isPasswordAdded);
+    console.log("User Updated ", isUserUpdated);
+    console.log("User Image Updated ", isImageUpdated);
+    if (isPasswordAdded && isUserUpdated) {
+      responseMsg.passwordUpdate = "Password successfully updated. 😎";
+    }
+    if (isUserUpdated) {
+      responseMsg.userUpdate = "User details successfully updated. 😍";
+    }
+    if (isImageUpdated) {
+      responseMsg.profilePictureUpdate =
+        "Profile picture successfully updated. 😉";
+    }
 
-      }
-      console.log("Password Added: ", isPasswordAdded)
-      console.log("User Updated ", isUserUpdated)
-      console.log("User Image Updated ", isImageUpdated)
-      if (isPasswordAdded && isUserUpdated) {
-        responseMsg.passwordUpdate = "Password successfully updated. 😎";
-      }
-      if (isUserUpdated) {
-        responseMsg.userUpdate = "User details successfully updated. 😍"
-      }
-      if (isImageUpdated) {
-        responseMsg.profilePictureUpdate = "Profile picture successfully updated. 😉"
-      }
-
-      console.log(responseMsg)
-      res.status(200).json({message: responseMsg});
+    console.log(responseMsg);
+    res.status(200).json({ message: responseMsg });
   } else {
     res.status(400).send();
   }

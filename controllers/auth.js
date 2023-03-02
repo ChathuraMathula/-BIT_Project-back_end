@@ -71,7 +71,7 @@ exports.login = async (req, res, next) => {
             .status(401)
             .json({
               error:
-                "Login Error..! 😣 Username or password incorrect. Please Try Again.",
+                "Login Error..! 😣 Username or password is incorrect. Please Try Again.",
             });
         }
       }
