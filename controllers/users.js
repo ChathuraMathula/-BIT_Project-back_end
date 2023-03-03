@@ -5,6 +5,8 @@ const fs = require("fs");
 const { comparePasswords, toHashPassword } = require("../util/password");
 const { sanitize } = require("../util/sanitizer");
 const { isValid } = require("../util/validator");
+const { postDocument } = require("../util/database");
+const { fetchUser, fetchUsers } = require("../models/users/Users");
 
 /**
  *
@@ -12,50 +14,77 @@ const { isValid } = require("../util/validator");
  * @param {object} res
  * @param {callback} next
  */
-exports.signup = (req, res, next) => {
-  const newCustomer = new Customer(req.body); // create a customer instance
+exports.signup = async (req, res, next) => {
+  try {
+    const firstname = sanitize(req.body.firstname.trim());
+    const lastname = sanitize(req.body.lastname.trim());
+    const username = sanitize(req.body.username.trim());
+    const phoneNo = sanitize(req.body.phoneNo.trim());
+    const address = sanitize(req.body.address.trim());
+    const email = sanitize(req.body.email.trim());
+    const password = sanitize(req.body.password.trim());
 
-  console.log("BODY: ", req.body);
-  // if a profile picture is uploaded
-  if (req.file && req.file.fieldname === "image") {
-    const imageFile = req.file;
-
-    // attach profile picture details (name, url) to the user document
-    newCustomer.profilePicture = {
-      name: imageFile.filename,
-      url: `http:localhost:3001/users/user/profile/photo/${imageFile.filename}`,
-    };
-  }
-  console.log(req.file);
-  newCustomer.save().then(
-    (resolve) => {
-      // if document is successfully stored in the collection
-      if (resolve) {
-        console.log(
-          `New User Registered ==> username: ${newCustomer.username}`
-        );
-
-        res.status(200).json({
-          message: "Registration Successful.",
-        });
+    const existingUser = await Users.fetchUser(
+      { username: username },
+      {
+        projection: {
+          username: 1,
+        },
       }
-    },
-    (reject) => {
-      // if the customer data not valid send 400 status code to the frontend
-      if (reject === "invalidCustomerData") {
-        res.status(400).json({
-          message: "Registration Faild.",
+    ).catch((error) => false);
+
+    if (existingUser) {
+      res.status(400).json({ error: "User already exists. 😐" });
+    } else if (
+      isValid("name", firstname) &&
+      isValid("name", lastname) &&
+      isValid("username", username) &&
+      isValid("password", password) &&
+      isValid("email", email) &&
+      isValid("phoneNo", phoneNo) &&
+      isValid("address", address)
+      ) {
+        const user = {
+          firstname: firstname,
+          lastname: lastname,
+          username: username,
+          phoneNo: phoneNo,
+          address: address,
+          email: email,
+          password: await toHashPassword(password),
+          role: "customer",
+        };
+        console.log("----------->> ", req.file?.fieldname === "image")
+        
+        if (req.file?.fieldname === "image") {
+          user.image = {
+            name: req.file.filename,
+            destination: "static/images/users/profile",
+          };
+        }
+        
+        await postDocument("users", user)
+        .then((result) => {
+          if (result) {
+            res.status(200).json({ success: "Successfully Registered. 😍" });
+          } else {
+            throw "error";
+          }
+        })
+        .catch((error) => {
+          if (error) {
+            res
+              .status(400)
+              .json({ error: "Sorry...! 😟 Registration failed." });
+          }
         });
-      } else {
-        // if the database error happens status code 500 = internal server error is sent.
-        res.status(500).json({
-          message: "Registration Faild.",
-        });
-      }
+    } else {
+      res.status(400).json({ error: "Invalid data... 😣" });
     }
-  );
+  } catch {
+    res.status(400).json({ error: "Sorry...! 😟 - Registration failed." });
+  }
 };
-/** =================== END signup(req, res, next) ============================================== */
 
 // fetch array of users documents from the database
 exports.getUsers = (req, res, next) => {
@@ -201,13 +230,12 @@ exports.updateUserContactDetails = async (req, res, next) => {
 
 exports.updatePhotographerPersonalDetails = async (req, res, next) => {
   try {
-   
     const username = sanitize(req.body.username.trim());
     const firstname = sanitize(req.body.firstname.trim());
     const lastname = sanitize(req.body.lastname.trim());
     const summary = sanitize(req.body.summary.trim());
     const bankName = sanitize(req.body.bankName.trim());
-    const bankAccountNo =sanitize(req.body.bankAccountNo.trim());
+    const bankAccountNo = sanitize(req.body.bankAccountNo.trim());
 
     if (
       isValid("username", username) &&
@@ -248,9 +276,7 @@ exports.updatePhotographerPersonalDetails = async (req, res, next) => {
     } else {
       res.status(400).json({ error: "Invalid data... 😣" });
     }
-  } catch (error) {
-    
-  }
+  } catch (error) {}
 };
 
 exports.updateUserPassword = async (req, res, next) => {

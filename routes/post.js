@@ -38,7 +38,7 @@ router.post(
 // POST /users
 // API endpoint to register users (customers)
 router.post(
-  "/users",
+  "/signup",
   UploadProfilePhoto.single("image"),
   usersController.signup
 );
@@ -85,6 +85,5 @@ router.post(
 );
 
 
-// photographer/update/intro/data
 
 module.exports = router;
