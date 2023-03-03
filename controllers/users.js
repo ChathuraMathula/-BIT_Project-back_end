@@ -199,6 +199,60 @@ exports.updateUserContactDetails = async (req, res, next) => {
   }
 };
 
+exports.updatePhotographerPersonalDetails = async (req, res, next) => {
+  try {
+   
+    const username = sanitize(req.body.username.trim());
+    const firstname = sanitize(req.body.firstname.trim());
+    const lastname = sanitize(req.body.lastname.trim());
+    const summary = sanitize(req.body.summary.trim());
+    const bankName = sanitize(req.body.bankName.trim());
+    const bankAccountNo =sanitize(req.body.bankAccountNo.trim());
+
+    if (
+      isValid("username", username) &&
+      isValid("name", firstname) &&
+      isValid("name", lastname) &&
+      isValid("summary", summary) &&
+      isValid("bankName", bankName) &&
+      isValid("bankAccountNo", bankAccountNo)
+    ) {
+      const filter = { username: username };
+      const updateFilter = {
+        $set: {
+          firstname: firstname,
+          lastname: lastname,
+          summary: summary,
+          bankName: bankName,
+          bankAccountNo: bankAccountNo,
+        },
+      };
+
+      await Users.updateUser(filter, updateFilter)
+        .then((result) => {
+          if (result) {
+            if (result.modifiedCount > 0) {
+              res.status(200).json({ success: "Saved successfully... 😎" });
+            } else if (result.modifiedCount === 0) {
+              res.status(200).json({ success: "You have already saved... 😅" });
+            }
+          } else {
+            throw "error";
+          }
+        })
+        .catch((error) => {
+          if (error) {
+            res.status(400).json({ error: "Sorry...! 😟 Save failed." });
+          }
+        });
+    } else {
+      res.status(400).json({ error: "Invalid data... 😣" });
+    }
+  } catch (error) {
+    
+  }
+};
+
 exports.updateUserPassword = async (req, res, next) => {
   if (req.body) {
     const username = sanitize(req.body.username.trim());

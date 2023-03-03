@@ -74,9 +74,17 @@ router.post(
   usersController.getUserProfilePic
 );
 
+// POST /photographer/update/intro/data
+// API endpoint to update photographer personal details such as 
+// (firstname | lastname | summary | bankName | bankAccountNo)
+router.post(
+  "/photographer/update/intro/data",
+  verifyToken,
+  upload.none(),
+  usersController.updatePhotographerPersonalDetails
+);
 
 
-
-
+// photographer/update/intro/data
 
 module.exports = router;

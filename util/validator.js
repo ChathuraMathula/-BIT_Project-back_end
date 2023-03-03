@@ -56,6 +56,18 @@ exports.isValid = (type, value) => {
       // url path pattern eg: /profile/photo
       pattern = /\/[a-z0-9\.]+$/i;
       break;
+    case "summary":
+      // summary description
+      pattern = /^[a-z0-9\.\,\ \+\']+$/i;
+      break;
+    case "bankName":
+      // bank name
+      pattern = /^[a-z0-9\.\,\ \']+$/i;
+      break;
+    case "bankAccountNo":
+      // bank account no
+      pattern = /^[0-9]+$/i;
+      break;
     default:
       pattern = /./;
       break;
@@ -66,10 +78,10 @@ exports.isValid = (type, value) => {
 };
 
 /**
-* 
-* @param {object} imageFile 
-* @returns true if image if of mime type "image/png" or "image/jpeg"
-*/
+ *
+ * @param {object} imageFile
+ * @returns true if image if of mime type "image/png" or "image/jpeg"
+ */
 exports.isValidImageFile = (imageFile) => {
   if (imageFile) {
     // match /image/png or /image/jpeg pattern
@@ -77,4 +89,4 @@ exports.isValidImageFile = (imageFile) => {
   } else {
     return false;
   }
- };
+};
