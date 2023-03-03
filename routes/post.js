@@ -43,13 +43,22 @@ router.post(
   usersController.signup
 );
 
-// POST /user/update
-// API endpoint update user document
+// POST /users/user/profile/picture/remove
+// API endpoint to remove user profile picture from file system based on username
 router.post(
-  "/user/update",
-  UploadProfilePhoto.single("image"),
+  "/user/remove/profile/picture",
   verifyToken,
-  usersController.updateUser
+  upload.none(),
+  usersController.removeUserImage
+);
+
+// POST /user/update/profile/image
+// API endpoint update user image
+router.post(
+  "/user/update/profile/picture",
+  verifyToken,
+  UploadProfilePhoto.single("image"),
+  usersController.updateUserImage
 );
 
 // POST /user
@@ -59,10 +68,15 @@ router.post("/user", verifyToken, upload.none(), usersController.getUser);
 // POST /users/user/profile/picture
 // API endpoint to get users profile pictures from file system based on username
 router.post(
-  "/users/user/profile/picture",
+  "/user/profile/picture",
   verifyToken,
   upload.none(),
   usersController.getUserProfilePic
 );
+
+
+
+
+
 
 module.exports = router;

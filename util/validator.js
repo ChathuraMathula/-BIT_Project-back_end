@@ -64,3 +64,17 @@ exports.isValid = (type, value) => {
   // return true if the value is matched to the pattern, otherwise return false
   return isMatched(value, pattern);
 };
+
+/**
+* 
+* @param {object} imageFile 
+* @returns true if image if of mime type "image/png" or "image/jpeg"
+*/
+exports.isValidImageFile = (imageFile) => {
+  if (imageFile) {
+    // match /image/png or /image/jpeg pattern
+    return /^image\/(png|jpeg)$/.test(imageFile.type);
+  } else {
+    return false;
+  }
+ };
