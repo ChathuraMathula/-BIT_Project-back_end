@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 
-const multer = require('multer');
+const multer = require("multer");
 const upload = multer();
 const cookieParser = require("cookie-parser");
 
@@ -10,8 +10,6 @@ const database = require("./util/database");
 const getRoutes = require("./routes/get");
 const postRoutes = require("./routes/post");
 
-app.use(cookieParser()); // parse cookies
-app.use(express.json()); // parse "application/json"
 // app.use(upload.none()); // parse "multipart/form-data"
 
 // app.use(express.urlencoded({ extended: true }));
@@ -27,6 +25,9 @@ app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Credentials", "true");
   next();
 });
+
+app.use(cookieParser()); // parse cookies
+app.use(express.json()); // parse "application/json"
 
 app.use(getRoutes);
 app.use(postRoutes);

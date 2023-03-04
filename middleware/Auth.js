@@ -12,6 +12,7 @@ exports.verifyToken = (req, res, next) => {
     jwt.verify(token, JWT_SECRET, (error, authData) => {
       if (error) {
         res.status(403).send(); // status code = forbidden if token is changed
+        return;
       } else {
         req.authData = authData;
         console.log("authData ", authData);

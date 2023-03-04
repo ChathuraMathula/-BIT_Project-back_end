@@ -6,6 +6,7 @@ const upload = multer();
 
 const usersController = require("../controllers/users");
 const authController = require("../controllers/auth");
+const packageController = require("../controllers/package");
 const { UploadProfilePhoto } = require("../middleware/UploadProfilePhoto");
 const { verifyToken } = require("../middleware/Auth");
 
@@ -84,6 +85,14 @@ router.post(
   usersController.updatePhotographerPersonalDetails
 );
 
+// POST /photographer/update/intro/data
+// API endpoint to update photographer personal details such as 
+// (firstname | lastname | summary | bankName | bankAccountNo)
+router.post(
+  "/admin/add/package",
+  verifyToken,
+  packageController.addNewPackage
+);
 
 
 module.exports = router;
