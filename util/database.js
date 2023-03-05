@@ -46,14 +46,13 @@ exports.getDb = () => {
   throw "No Database Found !";
 };
 
-/* ----------------------------------------------------------------------------------------
-  getCollection(); returns a Promise resolving an Array of documents
-
-  This function returns An array of documents from a collection based on the query and 
-  options provided. By default it gets all the documents in a collection without document _id.
- 
- ------------------------------------------------------------------------------------------*/
-
+/**
+ * 
+ * @param {string} collection collection name
+ * @param {object} query default {}
+ * @param {object} options default { projection: { _id: 0 } }
+ * @returns promise resolving an array of documents in the collection
+ */
 exports.getCollection = async (
   collection,
   query = {},
@@ -70,7 +69,6 @@ exports.getCollection = async (
   return documentsArray;
 };
 
-/* END getCollection() ----------------------------------------------------------------------------- */
 
 /**  ---------------------------------------------------------------------------------------------------
   getDocument(collection, query, options); returns a Promise resolving an object of document
@@ -100,14 +98,12 @@ exports.getDocument = async (
 
 /* END getDocument() ------------------------------------------------------------------------------- */
 
-/* ---------------------------------------------------------------------------------------------------
-  postDocument(); post a doucument to the database based on the given collection and document
-
-  This function returns an object with _id if the given document is successfully stored in the
-  given collection.
- 
------------------------------------------------------------------------------------------------------*/
-
+/**
+ * 
+ * @param {string} collection name of the collection, the document should be inserted into
+ * @param {object} document object of the document to be inserted
+ * @returns A promise resolving the result of the insert operation
+ */
 exports.postDocument = async (collection, document) => {
   const db = this.getDb();
 
@@ -116,8 +112,6 @@ exports.postDocument = async (collection, document) => {
   const result = await collectionName.insertOne(document);
   return result;
 };
-
-/* END postDocument() ------------------------------------------------------------------------------- */
 
 /**
  * 
@@ -132,5 +126,21 @@ exports.updateDocument = async (collection, filter, updateFilter) => {
   const documents = db.collection(collection);
 
   const result = await documents.updateOne(filter, updateFilter);
+  return result;
+};
+
+
+/**
+ * 
+ * @param {string} collection The collection name eg: "users"
+ * @param {object} query query object to delete many documents
+ * @returns A promise resolving the result of the deleteMany operation
+ */
+exports.deleteDocuments = async (collection, query) => {
+  const db = this.getDb();
+
+  const documents = db.collection(collection);
+
+  const result = await documents.deleteMany(query);
   return result;
 };

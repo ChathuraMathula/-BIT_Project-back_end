@@ -82,7 +82,7 @@ exports.signup = async (req, res, next) => {
       res.status(400).json({ error: "Invalid data... 😣" });
     }
   } catch {
-    res.status(400).json({ error: "Sorry...! 😟 - Registration failed." });
+    res.status(400).json({ error: "Sorry...! 😟 Registration failed." });
   }
 };
 

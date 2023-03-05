@@ -85,13 +85,30 @@ router.post(
   usersController.updatePhotographerPersonalDetails
 );
 
-// POST /photographer/update/intro/data
-// API endpoint to update photographer personal details such as 
-// (firstname | lastname | summary | bankName | bankAccountNo)
+// POST /admin/add/package
+// API endpoint to add a package
 router.post(
   "/admin/add/package",
   verifyToken,
   packageController.addNewPackage
+);
+
+
+// POST /admin/update/package
+// API endpoint to update package
+router.post(
+  "/admin/update/package",
+  verifyToken,
+  packageController.updatePackage
+);
+
+
+// POST /admin/remove/package
+// API endpoint to remove package
+router.post(
+  "/admin/remove/package",
+  verifyToken,
+  packageController.removePackage
 );
 
 

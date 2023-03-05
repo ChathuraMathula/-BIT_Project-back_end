@@ -3,6 +3,7 @@ const express = require("express");
 const router = express.Router();
 
 const usersController = require('../controllers/users');
+const packageController = require('../controllers/package');
 const { verifyToken } = require("../middleware/Auth");
 
 // GET /user
@@ -13,7 +14,7 @@ router.get("/user", verifyToken, usersController.getVerifiedUser);
 // API endpoint to get users collection from database
 router.get("/users", usersController.getUsers);
 
-
+router.get("/package/categories", packageController.getPackageCategories);
 
 
 module.exports = router;
