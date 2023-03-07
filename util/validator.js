@@ -84,6 +84,18 @@ exports.isValid = (type, value) => {
       // floating point numbers
       pattern = /^[0-9\.]+$/i;
       break;
+    case "year":
+      // year 2023
+      pattern = /^\d{4}$/;
+      break;
+    case "month":
+      // year 2023
+      pattern = /^\d{(2|1)}$/;
+      break;
+    case "day":
+      // year 2023
+      pattern = /^\d{(2|1)}$/;
+      break;
     default:
       pattern = /./;
       break;

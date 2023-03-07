@@ -78,9 +78,17 @@ exports.getCollection = async (
  
 -----------------------------------------------------------------------------------------------------*/
 
+/**
+ * 
+ * @param {string} collection collection name
+ * @param {object} query default {}
+ * @param {object} options default { projection: { _id: 0 } }
+ * @returns promise resolving a document in the collection
+ * @returns 
+ */
 exports.getDocument = async (
   collection,
-  query,
+  query = {},
   options = {
     projection: {
       _id: 0,
@@ -95,8 +103,6 @@ exports.getDocument = async (
   const document = await documents.findOne(query, options);
   return document;
 };
-
-/* END getDocument() ------------------------------------------------------------------------------- */
 
 /**
  * 

@@ -7,6 +7,7 @@ const upload = multer();
 const usersController = require("../controllers/users");
 const authController = require("../controllers/auth");
 const packageController = require("../controllers/package");
+const dateController = require("../controllers/dates");
 const { UploadProfilePhoto } = require("../middleware/UploadProfilePhoto");
 const { verifyToken } = require("../middleware/Auth");
 
@@ -110,6 +111,16 @@ router.post(
   verifyToken,
   packageController.removePackage
 );
+
+
+// POST /admin/add/available/date
+// API endpoint to add an available date
+router.post(
+  "/admin/add/available/date",
+  verifyToken,
+  dateController.setAvailableDate
+);
+
 
 
 module.exports = router;
