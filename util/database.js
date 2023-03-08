@@ -150,3 +150,18 @@ exports.deleteDocuments = async (collection, query) => {
   const result = await documents.deleteMany(query);
   return result;
 };
+
+/**
+ * 
+ * @param {string} collection The collection name eg: "users"
+ * @param {object} query query object to delete a document
+ * @returns A promise resolving the result of the deleteOne operation
+ */
+exports.deleteDocument = async (collection, query) => {
+  const db = this.getDb();
+
+  const documents = db.collection(collection);
+
+  const result = await documents.deleteOne(query);
+  return result;
+};

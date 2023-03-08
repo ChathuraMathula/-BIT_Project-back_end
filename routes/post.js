@@ -122,5 +122,22 @@ router.post(
 );
 
 
+// POST /admin/remove/available/date
+// API endpoint to add an available date
+router.post(
+  "/admin/remove/available/date",
+  verifyToken,
+  dateController.removeAvailableDate
+);
+
+// POST /admin/get/available/date
+// API endpoint to get an available date
+router.post(
+  "/get/available/date",
+  verifyToken,
+  dateController.getAvailableDate
+);
+
+
 
 module.exports = router;

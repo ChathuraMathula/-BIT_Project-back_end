@@ -1,4 +1,9 @@
-const { postDocument, getDocument, getCollection } = require("../../util/database");
+const {
+  postDocument,
+  getDocument,
+  getCollection,
+  deleteDocument,
+} = require("../../util/database");
 const { isValid } = require("../../util/validator");
 
 /**
@@ -24,16 +29,16 @@ exports.saveAvailableDate = async (dateObj) => {
 
     console.log(obj);
 
-    return await getDocument("availableDates", obj, { projection: { _id: 0 } }).then(
-      (result) => {
-        console.log("------> ", result);
-        if (result) {
-          return null;
-        } else {
-          return postDocument("availableDates", dateObj);
-        }
+    return await getDocument("availableDates", obj, {
+      projection: { _id: 0 },
+    }).then((result) => {
+      console.log("------> ", result);
+      if (result) {
+        return null;
+      } else {
+        return postDocument("availableDates", dateObj);
       }
-    );
+    });
   }
 };
 
@@ -41,5 +46,55 @@ exports.saveAvailableDate = async (dateObj) => {
  * @returns A promise resolving an array of available date documents
  */
 exports.fetchAvailableDates = async () => {
-    return await getCollection("availableDates");
-}
+  return await getCollection("availableDates");
+};
+
+/**
+ *
+ * @param {number} year
+ * @param {number} month
+ * @param {number} day
+ * @returns A promise resolving a date document
+ */
+exports.fetchAvailableDate = async (thisYear, thisMonth, thisDay) => {
+  if (
+    isValid("number", thisYear) &&
+    isValid("number", thisMonth) &&
+    isValid("number", thisDay)
+  ) {
+    const query = {
+      date: {
+        year: thisYear,
+        month: thisMonth,
+        day: thisDay,
+      },
+    };
+    return await getDocument("availableDates", query, {
+      projection: { _id: 0 },
+    });
+  }
+};
+
+/**
+ *
+ * @param {number} year
+ * @param {number} month
+ * @param {number} day
+ * @returns A promise resolving the result of the date delete operation
+ */
+exports.removeAvailableDate = async (thisYear, thisMonth, thisDay) => {
+    if (
+      isValid("number", thisYear) &&
+      isValid("number", thisMonth) &&
+      isValid("number", thisDay)
+    ) {
+      const query = {
+        date: {
+          year: thisYear,
+          month: thisMonth,
+          day: thisDay,
+        },
+      };
+      return await deleteDocument("availableDates", query);
+    }
+  };
