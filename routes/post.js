@@ -134,7 +134,7 @@ router.post(
 // API endpoint to get an available date
 router.post(
   "/get/available/date",
-  verifyToken,
+  // verifyToken,
   dateController.getAvailableDate
 );
 
