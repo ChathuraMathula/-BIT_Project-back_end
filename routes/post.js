@@ -8,6 +8,7 @@ const usersController = require("../controllers/users");
 const authController = require("../controllers/auth");
 const packageController = require("../controllers/package");
 const dateController = require("../controllers/dates");
+const reservationsController = require("../controllers/reservations");
 const { UploadProfilePhoto } = require("../middleware/UploadProfilePhoto");
 const { verifyToken } = require("../middleware/Auth");
 
@@ -138,6 +139,13 @@ router.post(
   dateController.getAvailableDate
 );
 
+// POST /customer/send/reservation/
+// API endpoint send a reservation request
+router.post(
+  "/customer/send/reservation/request",
+  verifyToken,
+  reservationsController.setNewReservation
+);
 
 
 module.exports = router;
