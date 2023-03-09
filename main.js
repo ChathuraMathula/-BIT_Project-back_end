@@ -9,6 +9,7 @@ const database = require("./util/database");
 
 const getRoutes = require("./routes/get");
 const postRoutes = require("./routes/post");
+const { Server } = require("socket.io");
 
 // app.use(upload.none()); // parse "multipart/form-data"
 
@@ -33,7 +34,12 @@ app.use(getRoutes);
 app.use(postRoutes);
 
 database.connect(() => {
-  app.listen(3001, () => {
+  const server = app.listen(3001, () => {
     console.log("server is listening on port 3001");
+  });
+
+  const io = require('./util/socket').init(server);
+  io.on("connection", (socket) => {
+    console.log("Client Connected");
   });
 });

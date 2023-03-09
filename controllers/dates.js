@@ -5,6 +5,7 @@ const {
   fetchAvailableDate,
   removeAvailableDate,
 } = require("../models/users/Dates");
+const { getIO } = require("../util/socket");
 
 /**
  * controller function for inserting a new Available Date document to the database
@@ -27,8 +28,13 @@ exports.setAvailableDate = async (req, res, next) => {
         console.log("Set Available Date: ERROR: ", error);
         res.status(400).json({ success: false });
       });
+
+    fetchAvailableDates().then((dates) => {
+      const io = getIO();
+      io.emit("dates", dates);
+    });
   } catch (error) {
-    console.log("Set Available Date: ERROR: ", error);
+    console.log("Set Available Date: ERROR: (inside catch block): ", error);
     res.status(400).json({ success: false });
   }
 };
@@ -105,6 +111,11 @@ exports.removeAvailableDate = async (req, res, next) => {
         console.log("Set Available Date: ERROR: ", error);
         res.status(400).json({ success: false });
       });
+
+    fetchAvailableDates().then((dates) => {
+      const io = getIO();
+      io.emit("dates", dates);
+    });
   } catch (error) {
     console.log("Set Available Date: ERROR: ", error);
     res.status(400).json({ success: false });
