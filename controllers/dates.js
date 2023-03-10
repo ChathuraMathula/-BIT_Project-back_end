@@ -112,7 +112,7 @@ exports.removeAvailableDate = async (req, res, next) => {
         res.status(400).json({ success: false });
       });
 
-    fetchAvailableDates().then((dates) => {
+    await fetchAvailableDates().then((dates) => {
       const io = getIO();
       io.emit("dates", dates);
     });
