@@ -5,28 +5,47 @@
         
 */
 
-const getDb = require("../../util/database").getDb;
+const { getDocument } = require("../../util/database");
 
-class Photographer {
-  // This function fetches the photographers details neccessary to display on welcome page
-  static async fetchWelcomeInfo() {
-    const db = getDb();
+// const getDb = require("../../util/database").getDb;
 
-    const query = { role: "photographer" };
-    const options = {
-        projection: {
-            firstname: 1,
-            lastname: 1,
-            summary: 1,
-            phone_no: 1,
-        }
-    };
+/**
+ * @returns A promise resolving a document in the collection
+ */
+exports.getPhotographerDetails = async () => {
+  return await getDocument(
+    "users",
+    { username: "photographer" },
+    {
+      projection: {
+        _id: 0,
+        password: 0,
+      },
+    }
+  );
+};
 
-    const users = db.collection('users');
+// class Photographer {
+//   // This function fetches the photographers details neccessary to display on welcome page
+//   static async fetchWelcomeInfo() {
+//     const db = getDb();
 
-    const photographerObj = await users.findOne(query, options);
-    return photographerObj;
-  }
-}
+//     const query = { role: "photographer" };
+//     const options = {
+//       projection: {
+//         firstname: 1,
+//         lastname: 1,
+//         summary: 1,
+//         phone_no: 1,
+//       },
+//     };
 
-module.exports = Photographer;
+//     const users = db.collection("users");
+
+//     const photographerObj = await users.findOne(query, options);
+//     return photographerObj;
+//   }
+// }
+
+// module.exports = Photographer;
+

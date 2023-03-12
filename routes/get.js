@@ -23,4 +23,8 @@ router.get("/package/categories", packageController.getPackageCategories);
 // API endpoint to get users collection from database
 router.get("/available/dates", datesController.getAvailableDates);
 
+// GET /photographer/details
+// API endpoint to get photographer details
+router.get("/photographer/details", usersController.getPhotographerDetails);
+
 module.exports = router;

@@ -3,6 +3,7 @@ const {
   getDocument,
   getCollection,
   deleteDocument,
+  updateDocument,
 } = require("../../util/database");
 const { isValid } = require("../../util/validator");
 
@@ -83,18 +84,48 @@ exports.fetchAvailableDate = async (thisYear, thisMonth, thisDay) => {
  * @returns A promise resolving the result of the date delete operation
  */
 exports.removeAvailableDate = async (thisYear, thisMonth, thisDay) => {
-    if (
-      isValid("number", thisYear) &&
-      isValid("number", thisMonth) &&
-      isValid("number", thisDay)
-    ) {
-      const query = {
-        date: {
-          year: thisYear,
-          month: thisMonth,
-          day: thisDay,
-        },
-      };
-      return await deleteDocument("availableDates", query);
-    }
-  };
+  if (
+    isValid("number", thisYear) &&
+    isValid("number", thisMonth) &&
+    isValid("number", thisDay)
+  ) {
+    const query = {
+      date: {
+        year: thisYear,
+        month: thisMonth,
+        day: thisDay,
+      },
+    };
+    return await deleteDocument("availableDates", query);
+  }
+};
+
+/**
+ *
+ * @param {number} year
+ * @param {number} month
+ * @param {number} day
+ * @param {object} updateFilter
+ * @returns A promise resolving the result of the date update operation
+ */
+exports.updateAvailableDate = async (
+  thisYear,
+  thisMonth,
+  thisDay,
+  updateFilter
+) => {
+  if (
+    isValid("number", thisYear) &&
+    isValid("number", thisMonth) &&
+    isValid("number", thisDay)
+  ) {
+    const filter = {
+      date: {
+        year: thisYear,
+        month: thisMonth,
+        day: thisDay,
+      },
+    };
+    return await updateDocument("availableDates", filter, updateFilter);
+  }
+};

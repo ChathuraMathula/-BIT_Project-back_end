@@ -7,6 +7,7 @@ const { sanitize } = require("../util/sanitizer");
 const { isValid } = require("../util/validator");
 const { postDocument } = require("../util/database");
 const { fetchUser, fetchUsers } = require("../models/users/Users");
+const { getPhotographerDetails } = require("../models/users/Photographer");
 
 /**
  *
@@ -43,27 +44,27 @@ exports.signup = async (req, res, next) => {
       isValid("email", email) &&
       isValid("phoneNo", phoneNo) &&
       isValid("address", address)
-      ) {
-        const user = {
-          firstname: firstname,
-          lastname: lastname,
-          username: username,
-          phoneNo: phoneNo,
-          address: address,
-          email: email,
-          password: await toHashPassword(password),
-          role: "customer",
+    ) {
+      const user = {
+        firstname: firstname,
+        lastname: lastname,
+        username: username,
+        phoneNo: phoneNo,
+        address: address,
+        email: email,
+        password: await toHashPassword(password),
+        role: "customer",
+      };
+      console.log("----------->> ", req.file?.fieldname === "image");
+
+      if (req.file?.fieldname === "image") {
+        user.image = {
+          name: req.file.filename,
+          destination: "static/images/users/profile",
         };
-        console.log("----------->> ", req.file?.fieldname === "image")
-        
-        if (req.file?.fieldname === "image") {
-          user.image = {
-            name: req.file.filename,
-            destination: "static/images/users/profile",
-          };
-        }
-        
-        await postDocument("users", user)
+      }
+
+      await postDocument("users", user)
         .then((result) => {
           if (result) {
             res.status(200).json({ success: "Successfully Registered. 😍" });
@@ -404,4 +405,20 @@ exports.removeUserImage = async (req, res, next) => {
   } catch (error) {
     res.status(400).json({ error: "Sorry...! 😟 Remove failed." });
   }
+};
+
+exports.getPhotographerDetails = async (req, res, next) => {
+  await getPhotographerDetails()
+    .then((details) => {
+      if (details) {
+        res.status(200).json(details);
+      } else {
+        throw "photographer details error";
+      }
+    })
+    .catch((error) => {
+      if (error) {
+        res.status(400).json({ success: false });
+      }
+    });
 };

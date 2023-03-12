@@ -78,7 +78,7 @@ router.post(
 );
 
 // POST /photographer/update/intro/data
-// API endpoint to update photographer personal details such as 
+// API endpoint to update photographer personal details such as
 // (firstname | lastname | summary | bankName | bankAccountNo)
 router.post(
   "/photographer/update/intro/data",
@@ -89,12 +89,7 @@ router.post(
 
 // POST /admin/add/package
 // API endpoint to add a package
-router.post(
-  "/admin/add/package",
-  verifyToken,
-  packageController.addNewPackage
-);
-
+router.post("/admin/add/package", verifyToken, packageController.addNewPackage);
 
 // POST /admin/update/package
 // API endpoint to update package
@@ -104,7 +99,6 @@ router.post(
   packageController.updatePackage
 );
 
-
 // POST /admin/remove/package
 // API endpoint to remove package
 router.post(
@@ -113,7 +107,6 @@ router.post(
   packageController.removePackage
 );
 
-
 // POST /admin/add/available/date
 // API endpoint to add an available date
 router.post(
@@ -121,7 +114,6 @@ router.post(
   verifyToken,
   dateController.setAvailableDate
 );
-
 
 // POST /admin/remove/available/date
 // API endpoint to add an available date
@@ -147,5 +139,20 @@ router.post(
   reservationsController.setNewReservation
 );
 
+// POST /photographer/send/reservation/payment/details
+// API endpoint send a reservation payment details
+router.post(
+  "/photographer/send/reservation/payment/details",
+  verifyToken,
+  reservationsController.addPhotographerPaymentDetails
+);
+
+// POST /photographer/remove/reservation
+// API endpoint remove a reservation document payment details
+router.post(
+  "/photographer/remove/reservation",
+  verifyToken,
+  reservationsController.removeReservation
+);
 
 module.exports = router;
