@@ -10,7 +10,9 @@ const database = require("./util/database");
 const getRoutes = require("./routes/get");
 const postRoutes = require("./routes/post");
 const { Server } = require("socket.io");
+const { onTimeOutRemoveReservation } = require("./middleware/Reservation");
 
+onTimeOutRemoveReservation();
 // app.use(upload.none()); // parse "multipart/form-data"
 
 // app.use(express.urlencoded({ extended: true }));
