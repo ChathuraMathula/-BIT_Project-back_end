@@ -7,6 +7,7 @@ const {
   updateReservation,
 } = require("../models/users/Reservation");
 const { getIO } = require("../util/socket");
+const { isValid } = require("../util/validator");
 
 exports.setNewReservation = async (req, res, next) => {
   try {
@@ -119,6 +120,101 @@ exports.removeReservation = async (req, res, next) => {
     });
   } catch (error) {
     console.log(error);
+    res.status(400).json({ success: false });
+  }
+};
+
+exports.addCustomerPaymentDetails = async (req, res, next) => {
+  console.log(req.body);
+  try {
+    const {
+      year: year,
+      month: month,
+      day: day,
+      paymentMethod: paymentMethod,
+      paidDate: paidDate,
+      paidTime: paidTime,
+      paidAmount: paidAmount,
+    } = req.body;
+
+    if (paymentMethod === "bank") {
+      const paidBranch = req.body.paidBranch;
+      if (
+        isValid("bankBranchName", paidBranch) &&
+        isValid("paidAmount", paidAmount) &&
+        isValid("date", paidDate) &&
+        isValid("time", paidTime)
+      ) {
+        const payment = {
+          method: paymentMethod,
+          branch: paidBranch,
+          amoung: paidAmount,
+          date: paidDate,
+          time: paidTime,
+        };
+
+        const updateFilter = {
+          $set: {
+            "reservation.payment": payment,
+          },
+        };
+        console.log(updateFilter);
+
+        await updateReservation(+year, +month, +day, updateFilter)
+          .then((result) => {
+            console.log(result);
+            if (result.modifiedCount > 0) {
+              res.status(200).json({ success: true });
+            } else {
+              throw "update reservation photographer payment details error";
+            }
+          })
+          .catch((error) => {
+            res.status(400).json({ success: false });
+          });
+      } else {
+        res.status(400).json({ success: false });
+      }
+    } else if (paymentMethod === "online banking") {
+      if (
+        isValid("paidAmount", paidAmount) &&
+        isValid("date", paidDate) &&
+        isValid("time", paidTime)
+      ) {
+        const payment = {
+          method: paymentMethod,
+          amoung: paidAmount,
+          date: paidDate,
+          time: paidTime,
+        };
+
+        const updateFilter = {
+          $set: {
+            "reservation.payment": payment,
+          },
+        };
+
+        await updateReservation(+year, +month, +day, updateFilter)
+          .then((result) => {
+            if (result.modifiedCount > 0) {
+              res.status(200).json({ success: true });
+            } else {
+              throw "update reservation photographer payment details error";
+            }
+          })
+          .catch((error) => {
+            res.status(400).json({ success: false });
+          });
+      } else {
+        res.status(400).json({ success: false });
+      }
+    }
+
+    await fetchAvailableDates().then((dates) => {
+      const io = getIO();
+      io.emit("dates", dates);
+    });
+  } catch (error) {
     res.status(400).json({ success: false });
   }
 };

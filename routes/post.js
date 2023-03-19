@@ -10,6 +10,7 @@ const packageController = require("../controllers/package");
 const dateController = require("../controllers/dates");
 const reservationsController = require("../controllers/reservations");
 const { UploadProfilePhoto } = require("../middleware/UploadProfilePhoto");
+const { UploadPaymentSlip } = require("../middleware/UploadPaymentSlip");
 const { verifyToken } = require("../middleware/Auth");
 
 // POST /login
@@ -153,6 +154,15 @@ router.post(
   "/photographer/remove/reservation",
   verifyToken,
   reservationsController.removeReservation
+);
+
+// POST /customer/send/reservation/payment/details
+// API endpoint send customer's payment details for a reservation
+router.post(
+  "/customer/send/reservation/payment/details",
+  verifyToken,
+  UploadPaymentSlip.single("paymentSlip"),
+  reservationsController.addCustomerPaymentDetails
 );
 
 module.exports = router;

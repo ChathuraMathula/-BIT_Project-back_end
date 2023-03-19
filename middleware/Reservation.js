@@ -2,6 +2,9 @@ const { fetchAvailableDates } = require("../models/users/Dates");
 const { updateReservation } = require("../models/users/Reservation");
 const { getIO } = require("../util/socket");
 
+/**
+ * checks weather the reservations have timed out and removes if it is
+ */
 exports.onTimeOutRemoveReservation = async () => {
   setInterval(() => {
     fetchAvailableDates().then((dates) => {
