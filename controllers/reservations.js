@@ -148,7 +148,7 @@ exports.addCustomerPaymentDetails = async (req, res, next) => {
         const payment = {
           method: paymentMethod,
           branch: paidBranch,
-          amoung: paidAmount,
+          amount: paidAmount,
           date: paidDate,
           time: paidTime,
         };
@@ -156,6 +156,10 @@ exports.addCustomerPaymentDetails = async (req, res, next) => {
         const updateFilter = {
           $set: {
             "reservation.payment": payment,
+          },
+          $unset: {
+            "reservation.endsAt": null,
+            "reservation.startsAt": null,
           },
         };
         console.log(updateFilter);
@@ -183,7 +187,7 @@ exports.addCustomerPaymentDetails = async (req, res, next) => {
       ) {
         const payment = {
           method: paymentMethod,
-          amoung: paidAmount,
+          amount: paidAmount,
           date: paidDate,
           time: paidTime,
         };
@@ -191,6 +195,10 @@ exports.addCustomerPaymentDetails = async (req, res, next) => {
         const updateFilter = {
           $set: {
             "reservation.payment": payment,
+          },
+          $unset: {
+            "reservation.endsAt": null,
+            "reservation.startsAt": null,
           },
         };
 
@@ -217,4 +225,33 @@ exports.addCustomerPaymentDetails = async (req, res, next) => {
   } catch (error) {
     res.status(400).json({ success: false });
   }
+};
+
+exports.confirmReservation = async (req, res, next) => {
+  try {
+    const date = req.body.date;
+
+    const updateFilter = {
+      $set: {
+        "reservation.state": "confirmed",
+      },
+    };
+    await updateReservation(+date.year, +date.month, +date.day, updateFilter)
+      .then((result) => {
+        console.log(result);
+        if (result.modifiedCount > 0) {
+          res.status(200).json({ success: true });
+        } else {
+          throw "confirm reservation error";
+        }
+      })
+      .catch((error) => {
+        res.status(400).json({ success: false });
+      });
+
+    await fetchAvailableDates().then((dates) => {
+      const io = getIO();
+      io.emit("dates", dates);
+    });
+  } catch (error) {}
 };

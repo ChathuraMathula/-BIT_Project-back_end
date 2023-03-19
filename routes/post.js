@@ -151,7 +151,7 @@ router.post(
 // POST /photographer/remove/reservation
 // API endpoint remove a reservation document payment details
 router.post(
-  "/photographer/remove/reservation",
+  "/remove/reservation",
   verifyToken,
   reservationsController.removeReservation
 );
@@ -163,6 +163,14 @@ router.post(
   verifyToken,
   UploadPaymentSlip.single("paymentSlip"),
   reservationsController.addCustomerPaymentDetails
+);
+
+// POST /confirm/reservation
+// API endpoint send customer's payment details for a reservation
+router.post(
+  "/confirm/reservation",
+  verifyToken,
+  reservationsController.confirmReservation
 );
 
 module.exports = router;
