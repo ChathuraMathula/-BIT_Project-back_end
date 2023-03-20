@@ -9,9 +9,13 @@ const authController = require("../controllers/auth");
 const packageController = require("../controllers/package");
 const dateController = require("../controllers/dates");
 const reservationsController = require("../controllers/reservations");
+const portfolioController = require("../controllers/portfolio");
 const { UploadProfilePhoto } = require("../middleware/UploadProfilePhoto");
 const { UploadPaymentSlip } = require("../middleware/UploadPaymentSlip");
 const { verifyToken } = require("../middleware/Auth");
+const {
+  UploadPortfolioImages,
+} = require("../middleware/UploadPortfolioImages");
 
 // POST /login
 // API endpoint to login users
@@ -179,6 +183,15 @@ router.post(
   "/payment/slip/photo",
   verifyToken,
   reservationsController.getReservationPaymentSlipPhoto
+);
+
+// POST /upload/portfolio/images
+// API endpoint upload and save portfolio images in the file system
+router.post(
+  "/upload/portfolio/images",
+  verifyToken,
+  UploadPortfolioImages.array("portfolioImages"),
+  portfolioController.uploadPortfolioImages
 );
 
 module.exports = router;
