@@ -8,6 +8,8 @@ const {
 } = require("../models/users/Reservation");
 const { getIO } = require("../util/socket");
 const { isValid } = require("../util/validator");
+const fs = require("fs");
+const path = require("path");
 
 exports.setNewReservation = async (req, res, next) => {
   try {
@@ -254,4 +256,55 @@ exports.confirmReservation = async (req, res, next) => {
       io.emit("dates", dates);
     });
   } catch (error) {}
+};
+
+exports.getReservationPaymentSlipPhoto = async (req, res, next) => {
+  try {
+    const { year: year, month: month, day: day } = req.body;
+    const filePath = path.join(
+      __dirname,
+      "../static/images/payment/slips/",
+      `${year}_${month}_${day}.jpeg`
+    );
+
+    const contentType = "image/jpeg";
+
+    fs.readFile(filePath, (error, data) => {
+      if (!error) {
+        res.writeHead(200, { "Content-Type": contentType });
+        res.end(data, "utf8");
+      } else {
+        fs.readFile(
+          path.join(
+            __dirname,
+            "../static/images/users/profile/default/",
+            "profilePicture.svg"
+          ),
+          (error, data) => {
+            if (!error) {
+              res.writeHead(200, { "Content-Type": "image/svg+xml" });
+              res.end(data, "utf8");
+            }
+          }
+        );
+      }
+    });
+  } catch (error) {
+    if (error) {
+      console.log("Pyment Slip Photo Error: ", error);
+      fs.readFile(
+        path.join(
+          __dirname,
+          "../static/images/users/profile/default/",
+          "profilePicture.svg"
+        ),
+        (error, data) => {
+          if (!error) {
+            res.writeHead(200, { "Content-Type": "image/svg+xml" });
+            res.end(data, "utf8");
+          }
+        }
+      );
+    }
+  }
 };

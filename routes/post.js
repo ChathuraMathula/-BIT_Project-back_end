@@ -173,4 +173,12 @@ router.post(
   reservationsController.confirmReservation
 );
 
+// POST /payment/slip/photo
+// API endpoint get payment slip photo based on the year, month and day
+router.post(
+  "/payment/slip/photo",
+  verifyToken,
+  reservationsController.getReservationPaymentSlipPhoto
+);
+
 module.exports = router;
