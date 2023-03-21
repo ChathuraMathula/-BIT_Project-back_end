@@ -6,6 +6,20 @@ const { getIO } = require("../util/socket");
 exports.uploadPortfolioImages = (req, res, next) => {
   if (req.files) {
     res.json({ success: true });
+    let images = [];
+    const dirPath = path.join(__dirname, "../static/images/portfolio");
+    fs.readdir(dirPath, (error, files) => {
+      if (!error) {
+        files.forEach((file) => {
+          images.push(file);
+        });
+        console.log(images);
+        const io = getIO();
+        io.emit("portfolio", images);
+      } else {
+        console.log("portfolio images upload error: ", error);
+      }
+    });
   }
 };
 
@@ -39,12 +53,23 @@ exports.removePortfolioImage = (req, res, next) => {
           throw "error";
         } else {
           res.status(200).json({ success: true });
+          let images = [];
+          const dirPath = path.join(__dirname, "../static/images/portfolio");
+          fs.readdir(dirPath, (error, files) => {
+            if (!error) {
+              files.forEach((file) => {
+                images.push(file);
+              });
+              console.log(images);
+              const io = getIO();
+              io.emit("portfolio", images);
+            } else {
+              console.log(error);
+            }
+          });
         }
       });
     }
-
-    const io = getIO();
-    io.emit("portfolio", dates);
   } catch (error) {
     res.status(400).json({ success: false });
   }

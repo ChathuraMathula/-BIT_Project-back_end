@@ -52,10 +52,10 @@ database.connect(() => {
     console.log("Client Connected");
   });
 
-  io.emit("portfolio", () => {
-    app.use(
-      "/portfolio/images",
-      express.static(path.join(__dirname, "static", "images", "portfolio"))
-    );
-  });
+  // io.emit("portfolio", () => {
+  //   app.use(
+  //     "/portfolio/images",
+  //     express.static(path.join(__dirname, "static", "images", "portfolio"))
+  //   );
+  // });
 });
