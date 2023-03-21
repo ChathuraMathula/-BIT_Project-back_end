@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
 
+const path = require("path");
+
 const multer = require("multer");
 const upload = multer();
 const cookieParser = require("cookie-parser");
@@ -29,6 +31,11 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(
+  "/portfolio/images",
+  express.static(path.join(__dirname, "static", "images", "portfolio"))
+);
+
 app.use(cookieParser()); // parse cookies
 app.use(express.json()); // parse "application/json"
 
@@ -40,8 +47,15 @@ database.connect(() => {
     console.log("server is listening on port 3001");
   });
 
-  const io = require('./util/socket').init(server);
+  const io = require("./util/socket").init(server);
   io.on("connection", (socket) => {
     console.log("Client Connected");
+  });
+
+  io.emit("portfolio", () => {
+    app.use(
+      "/portfolio/images",
+      express.static(path.join(__dirname, "static", "images", "portfolio"))
+    );
   });
 });

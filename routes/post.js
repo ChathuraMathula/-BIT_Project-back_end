@@ -194,4 +194,12 @@ router.post(
   portfolioController.uploadPortfolioImages
 );
 
+// POST /remove/portfolio/image
+// API endpoint remove existing portfolio image
+router.post(
+  "/remove/portfolio/image",
+  verifyToken,
+  portfolioController.removePortfolioImage
+);
+
 module.exports = router;

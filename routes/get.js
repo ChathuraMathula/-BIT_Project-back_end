@@ -5,7 +5,10 @@ const router = express.Router();
 const usersController = require("../controllers/users");
 const packageController = require("../controllers/package");
 const datesController = require("../controllers/dates");
+const portfolioController = require("../controllers/portfolio");
 const { verifyToken } = require("../middleware/Auth");
+
+const path = require("path");
 
 // GET /user
 // API endpoint to get an authentication & verified user document
@@ -26,5 +29,10 @@ router.get("/available/dates", datesController.getAvailableDates);
 // GET /photographer/details
 // API endpoint to get photographer details
 router.get("/photographer/details", usersController.getPhotographerDetails);
+
+// GET /portfolio/images/names
+// API endpoint to get names of portfolio images
+router.get("/portfolio/images/names", portfolioController.getPortfolioImages);
+
 
 module.exports = router;
