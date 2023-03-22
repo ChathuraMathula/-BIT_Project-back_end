@@ -9,6 +9,7 @@ const {
 } = require("../models/users/Packages");
 const { postDocument } = require("../util/database");
 const { sanitize } = require("../util/sanitizer");
+const { getIO } = require("../util/socket");
 const { isValid } = require("../util/validator");
 
 exports.addNewPackage = async (req, res, next) => {
@@ -95,6 +96,18 @@ exports.addNewPackage = async (req, res, next) => {
         res.status(400).json({ error: "Invalid data... 😣" });
       }
     }
+
+    await fetchPackageCategories(
+      {},
+      {
+        projection: {
+          _id: 0,
+        },
+      }
+    ).then((categories) => {
+      const io = getIO();
+      io.emit("packageCategories", categories);
+    });
   } catch (error) {
     console.log(
       "package.js : addNewPackage() ERROR: (Inside Catch Block)",
@@ -161,6 +174,18 @@ exports.updatePackage = async (req, res, next) => {
         res.status(400).json({ error: "Invalid data... 😣" });
       }
     }
+
+    await fetchPackageCategories(
+      {},
+      {
+        projection: {
+          _id: 0,
+        },
+      }
+    ).then((categories) => {
+      const io = getIO();
+      io.emit("packageCategories", categories);
+    });
   } catch (error) {
     console.log(
       "package.js : updatePackage() ERROR: (Inside Catch Block)",
@@ -211,6 +236,18 @@ exports.removePackage = async (req, res, next) => {
           });
       }
     }
+
+    await fetchPackageCategories(
+      {},
+      {
+        projection: {
+          _id: 0,
+        },
+      }
+    ).then((categories) => {
+      const io = getIO();
+      io.emit("packageCategories", categories);
+    });
   } catch (error) {
     console.log(
       "package.js : removePackage() ERROR: (Inside Catch Block)",
