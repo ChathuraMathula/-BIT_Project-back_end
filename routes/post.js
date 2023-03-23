@@ -202,4 +202,12 @@ router.post(
   portfolioController.removePortfolioImage
 );
 
+// POST /update/reservation
+// API endpoint send customer's payment details for a reservation
+router.post(
+  "/update/reservation",
+  verifyToken,
+  reservationsController.updateAdminReservation
+);
+
 module.exports = router;

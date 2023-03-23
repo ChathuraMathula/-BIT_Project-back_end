@@ -126,6 +126,47 @@ exports.removeReservation = async (req, res, next) => {
   }
 };
 
+exports.updateAdminReservation = async (req, res, next) => {
+  console.log(req.body);
+  try {
+    const {
+      date: date,
+      costs: costs,
+      event: event,
+      package: package,
+      category: category,
+    } = req.body;
+
+    const updateFilter = {
+      $set: {
+        "reservation.costs": costs,
+        "reservation.event": event,
+        "reservation.package": package,
+        "reservation.category": category,
+      },
+    };
+    await updateReservation(date.year, date.month, date.day, updateFilter)
+      .then((result) => {
+        if (result) {
+          res.status(200).json({ success: true });
+        } else {
+          throw "update reservation error";
+        }
+      })
+      .catch((error) => {
+        res.status(400).json({ success: false });
+      });
+
+    await fetchAvailableDates().then((dates) => {
+      const io = getIO();
+      io.emit("dates", dates);
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ success: false });
+  }
+};
+
 exports.addCustomerPaymentDetails = async (req, res, next) => {
   console.log(req.body);
   try {
