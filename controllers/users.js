@@ -422,3 +422,54 @@ exports.getPhotographerDetails = async (req, res, next) => {
       }
     });
 };
+
+exports.getPhotographerProfilePicure = async (req, res, next) => {
+  try {
+    const username = "photographer";
+    const filePath = path.join(
+      __dirname,
+      "../static/images/users/profile/",
+      `${username}.jpeg`
+    );
+
+    const contentType = "image/jpeg";
+
+    fs.readFile(filePath, (error, data) => {
+      if (!error) {
+        res.writeHead(200, { "Content-Type": contentType });
+        res.end(data, "utf8");
+      } else {
+        fs.readFile(
+          path.join(
+            __dirname,
+            "../static/images/users/profile/default/",
+            "profilePicture.svg"
+          ),
+          (error, data) => {
+            if (!error) {
+              res.writeHead(200, { "Content-Type": "image/svg+xml" });
+              res.end(data, "utf8");
+            }
+          }
+        );
+      }
+    });
+  } catch (error) {
+    if (error) {
+      console.log("Profile Picture Error: ", error);
+      fs.readFile(
+        path.join(
+          __dirname,
+          "../static/images/users/profile/default/",
+          "profilePicture.svg"
+        ),
+        (error, data) => {
+          if (!error) {
+            res.writeHead(200, { "Content-Type": "image/svg+xml" });
+            res.end(data, "utf8");
+          }
+        }
+      );
+    }
+  }
+};

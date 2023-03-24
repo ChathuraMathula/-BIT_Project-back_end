@@ -34,5 +34,11 @@ router.get("/photographer/details", usersController.getPhotographerDetails);
 // API endpoint to get names of portfolio images
 router.get("/portfolio/images/names", portfolioController.getPortfolioImages);
 
+// GET /photographer/profile/picture
+// API endpoint to get photographer profile picture
+router.get(
+  "/photographer/profile/picture",
+  usersController.getPhotographerProfilePicure
+);
 
 module.exports = router;
