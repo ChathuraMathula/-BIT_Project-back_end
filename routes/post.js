@@ -104,6 +104,14 @@ router.post(
   packageController.updatePackage
 );
 
+// POST /update/package/category
+// API endpoint to update package category
+router.post(
+  "/update/package/category/extra/services",
+  verifyToken,
+  packageController.addCategoryExtraServices
+);
+
 // POST /admin/remove/package
 // API endpoint to remove package
 router.post(

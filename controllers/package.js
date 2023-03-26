@@ -1,3 +1,4 @@
+const { updatePackageCategory } = require("../models/users/PackageCategories");
 const {
   fetchPackageCategories,
   savePackage,
@@ -256,5 +257,30 @@ exports.removePackage = async (req, res, next) => {
     res
       .status(400)
       .json({ error: "Sorry...! 😟 Failed to remove your package." });
+  }
+};
+
+exports.addCategoryExtraServices = async (req, res, next) => {
+  try {
+    const category = sanitize(req.body.category.trim());
+    const extraServices = req.body.extraServices;
+
+    if (category && extraServices) {
+      console.log(category, extraServices);
+      const updateFilter = {
+        $set: {
+          extraServices: extraServices.length > 0 ? extraServices : [],
+        },
+      };
+      await updatePackageCategory(category, updateFilter).then((result) => {
+        if (result.matchedCount > 0) {
+          res.status(200).json({ success: true });
+        } else {
+          res.status(400).json({ success: false });
+        }
+      });
+    }
+  } catch (error) {
+    res.status(400).json({ success: false });
   }
 };
