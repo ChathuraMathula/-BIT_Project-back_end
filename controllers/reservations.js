@@ -135,6 +135,7 @@ exports.updateAdminReservation = async (req, res, next) => {
       event: event,
       package: package,
       category: category,
+      extraServices: extraServices,
     } = req.body;
 
     const updateFilter = {
@@ -143,6 +144,7 @@ exports.updateAdminReservation = async (req, res, next) => {
         "reservation.event": event,
         "reservation.package": package,
         "reservation.category": category,
+        "reservation.extraServices": extraServices,
       },
     };
     await updateReservation(date.year, date.month, date.day, updateFilter)
