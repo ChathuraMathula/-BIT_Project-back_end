@@ -26,7 +26,7 @@ router.post("/login", upload.none(), authController.login);
 router.post("/logout", verifyToken, authController.logout);
 
 // POST /user/update/contact/details
-// API endpoint update user document
+// API endpoint update user contact details (email, address, phone number)
 router.post(
   "/user/update/contact/details",
   verifyToken,
@@ -35,7 +35,7 @@ router.post(
 );
 
 // POST /user/update/contact/details
-// API endpoint update user document
+// API endpoint update user password with the old one
 router.post(
   "/user/update/password",
   verifyToken,
@@ -129,14 +129,14 @@ router.post(
 );
 
 // POST /admin/remove/available/date
-// API endpoint to add an available date
+// API endpoint to remove an available date
 router.post(
   "/admin/remove/available/date",
   verifyToken,
   dateController.removeAvailableDate
 );
 
-// POST /admin/get/available/date
+// POST /get/available/date
 // API endpoint to get an available date
 router.post(
   "/get/available/date",
@@ -161,7 +161,7 @@ router.post(
 );
 
 // POST /photographer/remove/reservation
-// API endpoint remove a reservation document payment details
+// API endpoint remove a reservation document 
 router.post(
   "/remove/reservation",
   verifyToken,
@@ -178,7 +178,7 @@ router.post(
 );
 
 // POST /confirm/reservation
-// API endpoint send customer's payment details for a reservation
+// API endpoint to confirm a reservation
 router.post(
   "/confirm/reservation",
   verifyToken,

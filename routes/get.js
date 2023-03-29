@@ -11,7 +11,7 @@ const { verifyToken } = require("../middleware/Auth");
 const path = require("path");
 
 // GET /user
-// API endpoint to get an authentication & verified user document
+// API endpoint to get an authenticated & verified user document
 router.get("/user", verifyToken, usersController.getVerifiedUser);
 
 // GET /users
@@ -23,7 +23,7 @@ router.get("/users", usersController.getUsers);
 router.get("/package/categories", packageController.getPackageCategories);
 
 // GET /available/dates
-// API endpoint to get users collection from database
+// API endpoint to get availabeldates collection from database
 router.get("/available/dates", datesController.getAvailableDates);
 
 // GET /photographer/details
