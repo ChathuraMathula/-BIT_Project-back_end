@@ -2,20 +2,21 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const database = require("../util/database");
 const { comparePasswords } = require("../util/password");
+const { fetchUser } = require("../models/users/Users");
+const { sendTransactionEmail } = require("../util/mail");
+const Sib = require("sib-api-v3-sdk");
+
+const JWT_SECRET = "my_secret"; /* Secret key to generate jwt token */
 
 exports.getJwtSecret = () => {
-  const JWT_SECRET = "my_secret"; /* Secret key to generate jwt token */
   return JWT_SECRET;
 };
 
-/* ------------------ generateJwtToken() = Function to generate jwt token -------------------------- */
 const generateJwtToken = (payload) => {
-  const JWT_SECRET = this.getJwtSecret();
+  // const JWT_SECRET = this.getJwtSecret();
   return jwt.sign(payload, JWT_SECRET, { expiresIn: "2h" });
 };
-/* --------------------------- generateJwtToken() END ---------------------------------------------- */
 
-/* ------------------ login() = Function to send a jwt token when login ---------------------------- */
 exports.login = async (req, res, next) => {
   const { username, password } = req.body; // destructure username & password from request body
 
@@ -67,19 +68,14 @@ exports.login = async (req, res, next) => {
       if (error) {
         console.log("Login Error", error);
         if (error === "error") {
-          res
-            .status(401)
-            .json({
-              error:
-                "Login Error..! 😣 Username or password is incorrect. Please Try Again.",
-            });
+          res.status(401).json({
+            error:
+              "Login Error..! 😣 Username or password is incorrect. Please Try Again.",
+          });
         }
       }
     });
 };
-/* ------------------------------------- login() END ----------------------------------------------- */
-
-/* ----------------------------------- logout(); --------------------------------------------- */
 
 exports.logout = (req, res, next) => {
   console.log("logout: ", req.body);
@@ -91,4 +87,78 @@ exports.logout = (req, res, next) => {
   }
 };
 
-/* ------------------------------------ END logout(); ----------------------------------------- */
+exports.sendPasswordResetLink = async (req, res, next) => {
+  console.log("===>>> ", req.body);
+  try {
+    const username = req.body.username;
+    const user = await fetchUser(
+      { username: username },
+      { projection: { _id: 0 } }
+    );
+    if (!user || !user.email) {
+      return res.status(400).send({ success: false });
+    }
+    const secret = JWT_SECRET + user.password;
+    const token = jwt.sign(
+      { email: user.email, username: user.username },
+      secret,
+      { expiresIn: "500m" }
+    );
+
+    const link = `http://localhost:3000/reset/password/${user.username}/${token}`;
+    console.log(link);
+    if (link) {
+      res.status(200).json({ success: true });
+
+      const photographer = await fetchUser(
+        { username: "photographer" },
+        { projection: { _id: 0 } }
+      );
+
+      const htmlContent = `
+      <html>
+        <body>
+          <h1>Reset Password</h1>
+          <p>Please click the link below to reset your account password 😊</p>
+          <a href=${link}>Click Here</a>
+        </body>
+      </html>
+      `;
+
+      const emailObject = {
+        subject: "Reset password link",
+        sender: {
+          email: "photographer@reserveu.com",
+          name: `${photographer.firstname} ${photographer.lastname}`,
+        },
+        to: [{ name: `${user.firstname} ${user.lastname}`, email: user.email }],
+        htmlContent: htmlContent,
+      };
+      console.log(emailObject);
+      sendTransactionEmail(emailObject);
+
+      return;
+    }
+  } catch (error) {}
+};
+
+exports.verifyPasswordResetLink = async (req, res, next) => {
+  console.log("=====>>>>>>> ", req.body);
+  try {
+    const username = req.body.username;
+    const token = req.body.token;
+    const user = await fetchUser(
+      { username: username },
+      { projection: { _id: 0 } }
+    );
+    if (!user) {
+      return res.status(400).send({ success: false });
+    }
+    const secret = JWT_SECRET + user.password;
+    const verifiedToken = jwt.verify(token, secret);
+    console.log(verifiedToken);
+    if (verifiedToken) {
+      return res.status(200).json({ success: true });
+    }
+  } catch (error) {}
+};

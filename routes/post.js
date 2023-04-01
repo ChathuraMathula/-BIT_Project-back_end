@@ -218,4 +218,25 @@ router.post(
   reservationsController.updateAdminReservation
 );
 
+// POST /forgot/password
+// API endpoint to send a reset link to email if forgot password
+router.post(
+  "/forgot/password",
+  authController.sendPasswordResetLink
+);
+
+// POST /verify/password/reset
+// API endpoint to verify a password reset link
+router.post(
+  "/verify/password/reset",
+  authController.verifyPasswordResetLink
+);
+
+// POST /password/reset
+// API endpoint to verify a password reset link
+router.post(
+  "/password/reset",
+  usersController.resetUserPassword
+);
+
 module.exports = router;

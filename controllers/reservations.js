@@ -10,6 +10,8 @@ const { getIO } = require("../util/socket");
 const { isValid } = require("../util/validator");
 const fs = require("fs");
 const path = require("path");
+const { fetchUser } = require("../models/users/Users");
+const { sendTransactionEmail } = require("../util/mail");
 
 exports.setNewReservation = async (req, res, next) => {
   try {
@@ -286,6 +288,50 @@ exports.confirmReservation = async (req, res, next) => {
         console.log(result);
         if (result.modifiedCount > 0) {
           res.status(200).json({ success: true });
+
+          fetchAvailableDate(date.year, date.month, date.day)
+            .then((confirmedDate) => {
+              console.log("=====++++>>> ", confirmedDate);
+              return confirmedDate.reservation.customer;
+            })
+            .then((customerName) => {
+              const query = { username: customerName };
+              const options = { projection: { _id: 0 } };
+              return fetchUser(query, options);
+            })
+            .then((customerDocument) => {
+              console.log(customerDocument);
+              const email = customerDocument.email;
+              const firstname = customerDocument.firstname;
+              const lastname = customerDocument.lastname;
+
+              const htmlContent = `
+              <html>
+                <body>
+                  <h1>Reservation Successful</h1>
+                  <p>Your reservation request on 
+                  <b>${date.day}/${+date.month + 1}/${date.year}</b> 
+                  has been confirmed 😊</p>
+                </body>
+              </html>
+              `;
+
+              const emailObject = {
+                subject: "Reservation Successful",
+                sender: {
+                  email: "admin@reserveu.com",
+                },
+                to: [
+                  {
+                    name: `${firstname} ${lastname}`,
+                    email: email,
+                  },
+                ],
+                htmlContent: htmlContent,
+              };
+              console.log(emailObject);
+              sendTransactionEmail(emailObject);
+            });
         } else {
           throw "confirm reservation error";
         }

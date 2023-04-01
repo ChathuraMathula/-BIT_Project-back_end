@@ -473,3 +473,37 @@ exports.getPhotographerProfilePicure = async (req, res, next) => {
     }
   }
 };
+
+exports.resetUserPassword = async (req, res, next) => {
+  try {
+    const newPassword = sanitize(req.body.password.trim());
+    const username = sanitize(req.body.username.trim());
+
+    if (isValid("password", newPassword)) {
+      const filter = { username: username };
+      const updateFilter = {
+        $set: {
+          password: await toHashPassword(newPassword),
+        },
+      };
+
+      await Users.updateUser(filter, updateFilter)
+        .then((result) => {
+          if (result) {
+            if (result.modifiedCount > 0) {
+              return res.status(200).json({ success: true });
+            }
+          } else {
+            throw "error";
+          }
+        })
+        .catch((error) => {
+          if (error) {
+            return res.status(400).json({ success: false });
+          }
+        });
+    }
+  } catch (error) {
+    return res.status(400).json({ success: false });
+  }
+};
