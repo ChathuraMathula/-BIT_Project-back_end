@@ -1,7 +1,7 @@
 const Sib = require('sib-api-v3-sdk');
 
 const API_KEY =
-  "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";
+  "Your sendinblue API KEY";
 
 /**
    * 
