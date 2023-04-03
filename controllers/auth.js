@@ -14,7 +14,7 @@ exports.getJwtSecret = () => {
 
 const generateJwtToken = (payload) => {
   // const JWT_SECRET = this.getJwtSecret();
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: "2h" });
+  return jwt.sign(payload, JWT_SECRET, { expiresIn: "24h" });
 };
 
 exports.login = async (req, res, next) => {
@@ -52,7 +52,7 @@ exports.login = async (req, res, next) => {
           .status(200)
           .cookie("token", jwtToken, {
             httpOnly: true,
-            expires: new Date(Date.now() + 9000000),
+            expires: new Date(Date.now() + (1000 * 60 * 60 * 24)),
           })
           .json({
             user: {
@@ -110,11 +110,6 @@ exports.sendPasswordResetLink = async (req, res, next) => {
     if (link) {
       res.status(200).json({ success: true });
 
-      const photographer = await fetchUser(
-        { username: "photographer" },
-        { projection: { _id: 0 } }
-      );
-
       const htmlContent = `
       <html>
         <body>
@@ -128,8 +123,7 @@ exports.sendPasswordResetLink = async (req, res, next) => {
       const emailObject = {
         subject: "Reset password link",
         sender: {
-          email: "photographer@reserveu.com",
-          name: `${photographer.firstname} ${photographer.lastname}`,
+          email: "admin@reserveu.com",
         },
         to: [{ name: `${user.firstname} ${user.lastname}`, email: user.email }],
         htmlContent: htmlContent,
