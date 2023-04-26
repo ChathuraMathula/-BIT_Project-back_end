@@ -15,9 +15,6 @@ const { Server } = require("socket.io");
 const { onTimeOutRemoveReservation } = require("./middleware/Reservation");
 
 onTimeOutRemoveReservation();
-// app.use(upload.none()); // parse "multipart/form-data"
-
-// app.use(express.urlencoded({ extended: true }));
 
 // Setting CORS headers
 app.use((req, res, next) => {
@@ -51,11 +48,4 @@ database.connect(() => {
   io.on("connection", (socket) => {
     console.log("Client Connected");
   });
-
-  // io.emit("portfolio", () => {
-  //   app.use(
-  //     "/portfolio/images",
-  //     express.static(path.join(__dirname, "static", "images", "portfolio"))
-  //   );
-  // });
 });

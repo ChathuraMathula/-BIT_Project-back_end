@@ -233,7 +233,7 @@ router.post(
 );
 
 // POST /password/reset
-// API endpoint to verify a password reset link
+// API endpoint to reset user password with a new one
 router.post(
   "/password/reset",
   usersController.resetUserPassword

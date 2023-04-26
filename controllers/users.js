@@ -210,9 +210,9 @@ exports.updateUserContactDetails = async (req, res, next) => {
         .then((result) => {
           if (result) {
             if (result.modifiedCount > 0) {
-              res.status(200).json({ success: "Saved successfully... 😎" });
+              res.status(200).json({ success: "Saved successfully..." });
             } else if (result.modifiedCount === 0) {
-              res.status(200).json({ success: "You have already saved... 😅" });
+              res.status(200).json({ success: "You have already saved contact details." });
             }
           } else {
             throw "error";
@@ -220,11 +220,11 @@ exports.updateUserContactDetails = async (req, res, next) => {
         })
         .catch((error) => {
           if (error) {
-            res.status(400).json({ error: "Sorry...! 😟 Save failed." });
+            res.status(400).json({ error: "Sorry...! Save failed." });
           }
         });
     } else {
-      res.status(400).json({ error: "Invalid data... 😣" });
+      res.status(400).json({ error: "Invalid data..." });
     }
   }
 };
@@ -261,9 +261,9 @@ exports.updatePhotographerPersonalDetails = async (req, res, next) => {
         .then((result) => {
           if (result) {
             if (result.modifiedCount > 0) {
-              res.status(200).json({ success: "Saved successfully... 😎" });
+              res.status(200).json({ success: "Saved successfully..." });
             } else if (result.modifiedCount === 0) {
-              res.status(200).json({ success: "You have already saved... 😅" });
+              res.status(200).json({ success: "You have already saved..." });
             }
           } else {
             throw "error";
@@ -271,11 +271,11 @@ exports.updatePhotographerPersonalDetails = async (req, res, next) => {
         })
         .catch((error) => {
           if (error) {
-            res.status(400).json({ error: "Sorry...! 😟 Save failed." });
+            res.status(400).json({ error: "Sorry...! Save failed." });
           }
         });
     } else {
-      res.status(400).json({ error: "Invalid data... 😣" });
+      res.status(400).json({ error: "Invalid data..." });
     }
   } catch (error) {}
 };
@@ -320,11 +320,11 @@ exports.updateUserPassword = async (req, res, next) => {
           .then((result) => {
             if (result) {
               if (result.modifiedCount > 0) {
-                res.status(200).json({ success: "Password changed... 😎" });
+                res.status(200).json({ success: "Password changed..." });
               } else if (result.modifiedCount === 0) {
                 res
                   .status(200)
-                  .json({ success: "You have already saved... 😅" });
+                  .json({ success: "You have already saved..." });
               }
             } else {
               throw "error";
@@ -332,14 +332,14 @@ exports.updateUserPassword = async (req, res, next) => {
           })
           .catch((error) => {
             if (error) {
-              res.status(400).json({ error: "Sorry...! 😟 Save failed." });
+              res.status(400).json({ error: "Sorry...! Save failed." });
             }
           });
       } else {
-        res.status(400).json({ error: "Incorrect old password... 😣" });
+        res.status(400).json({ error: "Incorrect old password..." });
       }
     } else {
-      res.status(400).json({ error: "Invalid data... 😣" });
+      res.status(400).json({ error: "Invalid data..." });
     }
   }
 };
@@ -360,13 +360,13 @@ exports.updateUserImage = async (req, res, next) => {
 
     await Users.updateUser(filter, updateFilter).then((result) => {
       if (result.modifiedCount >= 0) {
-        res.status(200).json({ success: "Profile picture saved... 😎" });
+        res.status(200).json({ success: "Profile picture saved..." });
       } else {
         throw "error";
       }
     });
   } catch (error) {
-    res.status(400).json({ error: "Sorry...! 😟 Save failed." });
+    res.status(400).json({ error: "Sorry...! Save failed." });
   }
 };
 
@@ -391,19 +391,19 @@ exports.removeUserImage = async (req, res, next) => {
     if (removeImage) {
       fs.unlink(filePath, (error) => {
         if (error) {
-          throw "error";
+          return;
         }
       });
       await Users.updateUser(filter, updateFilter).then((result) => {
         if (result.modifiedCount >= 0) {
-          res.status(200).json({ success: "Profile picture removed... 😎" });
+          res.status(200).json({ success: "Profile picture removed..." });
         } else {
           throw "error";
         }
       });
     }
   } catch (error) {
-    res.status(400).json({ error: "Sorry...! 😟 Remove failed." });
+    res.status(400).json({ error: "Sorry...! Remove failed." });
   }
 };
 
