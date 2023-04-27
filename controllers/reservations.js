@@ -99,12 +99,13 @@ exports.addPhotographerPaymentDetails = async (req, res, next) => {
 };
 
 exports.removeReservation = async (req, res, next) => {
-  console.log(req.body);
+  console.log("Remove Reservation: ---> ", req.body);
   try {
-    const { date: date } = req.body;
+    const { date: date, customer: customer, message: message } = req.body;
 
     const updateFilter = {
       $unset: { reservation: {} },
+      $push: { rejections: { customer: customer, message: message } },
     };
     await updateReservation(date.year, date.month, date.day, updateFilter)
       .then((result) => {
