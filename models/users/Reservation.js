@@ -28,7 +28,6 @@ exports.addNewReservation = async (
 };
 
 /**
- *
  * @param {number} thisYear
  * @param {number} thisMonth
  * @param {number} thisDay

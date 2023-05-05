@@ -83,6 +83,11 @@ exports.getAvailableDate = async (req, res, next) => {
         console.log("get available date : ERROR: ", error);
         res.status(400).send();
       });
+
+    await fetchAvailableDates().then((dates) => {
+      const io = getIO();
+      io.emit("dates", dates);
+    });
   } catch (error) {
     console.log("get available date : ERROR: (inside catch block) ", error);
     res.status(400).send();
