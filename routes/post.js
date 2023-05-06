@@ -168,6 +168,14 @@ router.post(
   reservationsController.removeReservation
 );
 
+// POST /photographer/reject/reservation
+// API endpoint reject a reservation document 
+router.post(
+  "/reject/reservation",
+  verifyToken,
+  reservationsController.removeReservation
+);
+
 // POST /customer/send/reservation/payment/details
 // API endpoint send customer's payment details for a reservation
 router.post(
