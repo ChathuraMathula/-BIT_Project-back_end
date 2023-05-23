@@ -69,12 +69,7 @@ exports.setNewReservation = async (req, res, next) => {
       });
     }
 
-    // await fetchAvailableDates().then((dates) => {
-    //   const io = getIO();
-    //   io.emit("dates", dates);
-    // });
   } catch (error) {
-    console.log(">>>>>>>>___ ", error);
     res
       .status(400)
       .json({ error: "Sorry..! Sending reservation request failed. 😕" });

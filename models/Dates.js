@@ -13,7 +13,7 @@ const { isValid } = require("../util/validator");
  * @returns A promise resolving the result of the insert operation
  */
 exports.saveAvailableDate = async (dateObj) => {
-  console.log(dateObj, "+++++++++");
+  
   // if date is valid
   if (
     isValid("number", dateObj.date.year) &&
@@ -28,12 +28,12 @@ exports.saveAvailableDate = async (dateObj) => {
       },
     };
 
-    console.log(obj);
+    
 
     return await getDocument("availableDates", obj, {
       projection: { _id: 0 },
     }).then((result) => {
-      console.log("------> ", result);
+      
       if (result) {
         return null;
       } else {
