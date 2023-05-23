@@ -1,5 +1,5 @@
-const { fetchAvailableDates } = require("../models/users/Dates");
-const { updateReservation } = require("../models/users/Reservation");
+const { fetchAvailableDates } = require("../models/Dates");
+const { updateReservation } = require("../models/Reservation");
 const { getIO } = require("../util/socket");
 
 /**

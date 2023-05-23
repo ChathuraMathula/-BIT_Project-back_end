@@ -1,18 +1,18 @@
 const {
   fetchAvailableDate,
   fetchAvailableDates,
-} = require("../models/users/Dates");
+} = require("../models/Dates");
 const {
   addNewReservation,
   updateReservation,
-} = require("../models/users/Reservation");
+} = require("../models/Reservation");
 const { getIO } = require("../util/socket");
 const { isValid } = require("../util/validator");
 const fs = require("fs");
 const path = require("path");
-const { fetchUser } = require("../models/users/Users");
+const { fetchUser } = require("../models/Users");
 const { sendTransactionEmail } = require("../util/mail");
-const { fetchPackageCategories } = require("../models/users/Packages");
+const { fetchPackageCategories } = require("../models/Packages");
 
 exports.setNewReservation = async (req, res, next) => {
   try {

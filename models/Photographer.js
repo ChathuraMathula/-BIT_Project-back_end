@@ -5,7 +5,7 @@
         
 */
 
-const { getDocument } = require("../../util/database");
+const { getDocument } = require("../util/database");
 
 // const getDb = require("../../util/database").getDb;
 
