@@ -4,7 +4,7 @@ const {
   fetchAvailableDates,
   fetchAvailableDate,
   removeAvailableDate,
-} = require("../models/Dates");
+} = require("../models/users/Dates");
 const { getIO } = require("../util/socket");
 
 /**

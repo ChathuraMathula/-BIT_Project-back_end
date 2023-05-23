@@ -1,7 +1,7 @@
-const database = require("../util/database");
-const { toHashPassword } = require("../util/password");
-const { sanitize } = require("../util/sanitizer");
-const { isValid } = require("../util/validator");
+const database = require("../../util/database");
+const { toHashPassword } = require("../../util/password");
+const { sanitize } = require("../../util/sanitizer");
+const { isValid } = require("../../util/validator");
 
 /*
     Last Modified: 17.02.2023

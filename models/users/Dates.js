@@ -4,8 +4,8 @@ const {
   getCollection,
   deleteDocument,
   updateDocument,
-} = require("../util/database");
-const { isValid } = require("../util/validator");
+} = require("../../util/database");
+const { isValid } = require("../../util/validator");
 
 /**
  *

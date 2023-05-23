@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const database = require("../util/database");
 const { comparePasswords } = require("../util/password");
-const { fetchUser } = require("../models/Users");
+const { fetchUser } = require("../models/users/Users");
 const { sendTransactionEmail } = require("../util/mail");
 const Sib = require("sib-api-v3-sdk");
 

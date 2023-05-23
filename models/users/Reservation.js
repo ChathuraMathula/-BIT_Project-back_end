@@ -1,4 +1,4 @@
-const { updateDocument } = require("../util/database");
+const { updateDocument } = require("../../util/database");
 
 /**
  *

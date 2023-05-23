@@ -4,7 +4,7 @@ const {
   updateDocument,
   postDocument,
   deleteDocuments,
-} = require("../util/database");
+} = require("../../util/database");
 
 /**
  * @param {object} query

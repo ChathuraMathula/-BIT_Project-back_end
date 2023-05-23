@@ -5,7 +5,7 @@
         
 */
 
-const database = require("../util/database");
+const database = require("../../util/database");
 
 class Users {
   /**
