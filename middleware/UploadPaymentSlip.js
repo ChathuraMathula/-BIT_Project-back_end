@@ -14,7 +14,7 @@ const multerStorage = multer.diskStorage({
 
 // Multer filter for filtering jpeg & png files
 const multerFilter = (req, file, callback) => {
-    
+    console.log("FILE : ", file)
     const ext = file.mimetype.split('/')[1];
     if (ext === 'jpeg' || ext === 'png') {
         callback(null, true);

@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const database = require("../util/database");
 const { comparePasswords } = require("../util/password");
-const { fetchUser } = require("../models/users/Users");
+const { fetchUser } = require("../models/Users");
 const { sendTransactionEmail } = require("../util/mail");
 const Sib = require("sib-api-v3-sdk");
 
@@ -13,7 +13,6 @@ exports.getJwtSecret = () => {
 };
 
 const generateJwtToken = (payload) => {
-  // const JWT_SECRET = this.getJwtSecret();
   return jwt.sign(payload, JWT_SECRET, { expiresIn: "24h" });
 };
 
@@ -88,7 +87,6 @@ exports.logout = (req, res, next) => {
 };
 
 exports.sendPasswordResetLink = async (req, res, next) => {
-  console.log("===>>> ", req.body);
   try {
     const username = req.body.username;
     const user = await fetchUser(

@@ -1,4 +1,4 @@
-const { updatePackageCategory } = require("../models/users/PackageCategories");
+const { updatePackageCategory } = require("../models/PackageCategories");
 const {
   fetchPackageCategories,
   savePackage,
@@ -7,7 +7,7 @@ const {
   removePackage,
   removePackageCategory,
   removeEmptyPackageCategories,
-} = require("../models/users/Packages");
+} = require("../models/Packages");
 const { postDocument } = require("../util/database");
 const { sanitize } = require("../util/sanitizer");
 const { getIO } = require("../util/socket");

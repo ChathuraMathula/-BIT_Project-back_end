@@ -1,13 +1,13 @@
-const Customer = require("../models/users/Customer");
-const Users = require("../models/users/Users");
+const Customer = require("../models/Customer");
+const Users = require("../models/Users");
 const path = require("path");
 const fs = require("fs");
 const { comparePasswords, toHashPassword } = require("../util/password");
 const { sanitize } = require("../util/sanitizer");
 const { isValid } = require("../util/validator");
 const { postDocument } = require("../util/database");
-const { fetchUser, fetchUsers } = require("../models/users/Users");
-const { getPhotographerDetails } = require("../models/users/Photographer");
+const { fetchUser, fetchUsers } = require("../models/Users");
+const { getPhotographerDetails } = require("../models/Photographer");
 
 /**
  *
