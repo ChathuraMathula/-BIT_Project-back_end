@@ -1,4 +1,3 @@
-const Customer = require("../models/Customer");
 const Users = require("../models/Users");
 const path = require("path");
 const fs = require("fs");
@@ -6,7 +5,6 @@ const { comparePasswords, toHashPassword } = require("../util/password");
 const { sanitize } = require("../util/sanitizer");
 const { isValid } = require("../util/validator");
 const { postDocument } = require("../util/database");
-const { fetchUser, fetchUsers } = require("../models/Users");
 const { getPhotographerDetails } = require("../models/Photographer");
 
 /**
@@ -15,7 +13,7 @@ const { getPhotographerDetails } = require("../models/Photographer");
  * @param {object} res
  * @param {callback} next
  */
-exports.signup = async (req, res, next) => {
+exports.signup = async (req, res) => {
   try {
     const firstname = sanitize(req.body.firstname.trim());
     const lastname = sanitize(req.body.lastname.trim());
@@ -32,7 +30,7 @@ exports.signup = async (req, res, next) => {
           username: 1,
         },
       }
-    ).catch((error) => false);
+    ).catch(() => false);
 
     if (existingUser) {
       res.status(400).json({ error: "User already exists. 😐" });
@@ -88,11 +86,11 @@ exports.signup = async (req, res, next) => {
 };
 
 // fetch array of users documents from the database
-exports.getUsers = (req, res, next) => {
+exports.getUsers = (req, res) => {
   Users.fetchUsers().then((result) => res.json(result));
 };
 
-exports.getUserProfilePic = async (req, res, next) => {
+exports.getUserProfilePic = async (req, res) => {
   try {
     const username = sanitize(req.body.username.trim());
     const filePath = path.join(
@@ -147,7 +145,7 @@ exports.getUserProfilePic = async (req, res, next) => {
  *
  * @returns a verified user document to the endpoint as json object
  */
-exports.getVerifiedUser = (req, res, next) => {
+exports.getVerifiedUser = (req, res) => {
   Users.fetchUser({ username: req.authData.username })
     .then((user) => {
       console.log("get verified user ", user);
@@ -161,7 +159,7 @@ exports.getVerifiedUser = (req, res, next) => {
     });
 };
 
-exports.getUser = (req, res, next) => {
+exports.getUser = (req, res) => {
   Users.fetchUser({ username: req.body.username })
     .then((user) => {
       if (user) {
@@ -184,7 +182,7 @@ exports.getUser = (req, res, next) => {
  * @returns sends a {success} object as json if user contact details are updated successfully.
  * else sends {error} object as json.
  */
-exports.updateUserContactDetails = async (req, res, next) => {
+exports.updateUserContactDetails = async (req, res) => {
   if (req.body) {
     const username = sanitize(req.body.username);
     const email = sanitize(req.body.email);
@@ -229,7 +227,7 @@ exports.updateUserContactDetails = async (req, res, next) => {
   }
 };
 
-exports.updatePhotographerPersonalDetails = async (req, res, next) => {
+exports.updatePhotographerPersonalDetails = async (req, res) => {
   try {
     const username = sanitize(req.body.username.trim());
     const firstname = sanitize(req.body.firstname.trim());
@@ -280,7 +278,7 @@ exports.updatePhotographerPersonalDetails = async (req, res, next) => {
   } catch (error) {}
 };
 
-exports.updateUserPassword = async (req, res, next) => {
+exports.updateUserPassword = async (req, res) => {
   if (req.body) {
     const username = sanitize(req.body.username.trim());
     const oldPassword = sanitize(req.body.oldPassword.trim());
@@ -344,7 +342,7 @@ exports.updateUserPassword = async (req, res, next) => {
   }
 };
 
-exports.updateUserImage = async (req, res, next) => {
+exports.updateUserImage = async (req, res) => {
   try {
     const username = sanitize(req.body.username.trim());
     const image = req.file;
@@ -370,7 +368,7 @@ exports.updateUserImage = async (req, res, next) => {
   }
 };
 
-exports.removeUserImage = async (req, res, next) => {
+exports.removeUserImage = async (req, res) => {
   try {
     const username = sanitize(req.body.username.trim());
     const removeImage = sanitize(req.body.removeImage.trim());
@@ -407,7 +405,7 @@ exports.removeUserImage = async (req, res, next) => {
   }
 };
 
-exports.getPhotographerDetails = async (req, res, next) => {
+exports.getPhotographerDetails = async (req, res) => {
   await getPhotographerDetails()
     .then((details) => {
       if (details) {
@@ -423,7 +421,7 @@ exports.getPhotographerDetails = async (req, res, next) => {
     });
 };
 
-exports.getPhotographerProfilePicure = async (req, res, next) => {
+exports.getPhotographerProfilePicure = async (req, res) => {
   try {
     const username = "photographer";
     const filePath = path.join(
@@ -474,7 +472,7 @@ exports.getPhotographerProfilePicure = async (req, res, next) => {
   }
 };
 
-exports.resetUserPassword = async (req, res, next) => {
+exports.resetUserPassword = async (req, res) => {
   try {
     const newPassword = sanitize(req.body.password.trim());
     const username = sanitize(req.body.username.trim());

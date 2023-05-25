@@ -1,11 +1,3 @@
-/* 
-    Modified at : 08.02.2023
-    Utility: Database Connection
-    Number of functions: 2
-    Functions: 
-        dbConnection()
-        getDb()
-*/
 
 const mongodb = require("mongodb");
 const MongoClient = mongodb.MongoClient;
@@ -15,12 +7,10 @@ const uri =
 
 let _db;
 
-/* ----------------------------------------------------------------------------------------
-
-  This function makes a connection to the mongodb database and register a callback function
-  once the connection is successful. 
- 
- ------------------------------------------------------------------------------------------*/
+/**
+ * This function makes a connection to the mongodb database and 
+ * register a callback function once the connection is successful. 
+ */
 exports.connect = (callback) => {
   MongoClient.connect(uri)
     .then((client) => {
@@ -34,11 +24,9 @@ exports.connect = (callback) => {
     });
 };
 
-/* ----------------------------------------------------------------------------------------
-
-  This function returns the database which is connected to
- 
- ------------------------------------------------------------------------------------------*/
+/** 
+ * @returns the database object which is connected to
+*/
 exports.getDb = () => {
   if (_db) {
     return _db;
@@ -69,14 +57,6 @@ exports.getCollection = async (
   return documentsArray;
 };
 
-
-/**  ---------------------------------------------------------------------------------------------------
-  getDocument(collection, query, options); returns a Promise resolving an object of document
-
-  This function returns an object of document from a collection based on the query and 
-  options provided.
- 
------------------------------------------------------------------------------------------------------*/
 
 /**
  * 
