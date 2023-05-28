@@ -126,6 +126,7 @@ exports.rejectReservation = async (req, res, next) => {
       };
       await updateReservation(date.year, date.month, date.day, updateFilter)
         .then((result) => {
+          console.log("REJECTED: ", result)
           if (result) {
             res.status(200).json({ success: true });
           } else {
