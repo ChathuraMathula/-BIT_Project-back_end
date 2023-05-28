@@ -1,10 +1,8 @@
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
 const database = require("../util/database");
 const { comparePasswords } = require("../util/password");
-const { fetchUser } = require("../models/users/Users");
+const { fetchUser } = require("../models/Users");
 const { sendTransactionEmail } = require("../util/mail");
-const Sib = require("sib-api-v3-sdk");
 
 const JWT_SECRET = "my_secret"; /* Secret key to generate jwt token */
 
@@ -12,12 +10,12 @@ exports.getJwtSecret = () => {
   return JWT_SECRET;
 };
 
+// Generate Json Web Token
 const generateJwtToken = (payload) => {
-  // const JWT_SECRET = this.getJwtSecret();
   return jwt.sign(payload, JWT_SECRET, { expiresIn: "24h" });
 };
 
-exports.login = async (req, res, next) => {
+exports.login = async (req, res) => {
   const { username, password } = req.body; // destructure username & password from request body
 
   let user;
@@ -77,7 +75,7 @@ exports.login = async (req, res, next) => {
     });
 };
 
-exports.logout = (req, res, next) => {
+exports.logout = (req, res) => {
   console.log("logout: ", req.body);
   console.log("logout authData.username: ", req.authData.username);
   if (req.authData.username) {
@@ -87,8 +85,7 @@ exports.logout = (req, res, next) => {
   }
 };
 
-exports.sendPasswordResetLink = async (req, res, next) => {
-  console.log("===>>> ", req.body);
+exports.sendPasswordResetLink = async (req, res) => {
   try {
     const username = req.body.username;
     const user = await fetchUser(
@@ -136,7 +133,7 @@ exports.sendPasswordResetLink = async (req, res, next) => {
   } catch (error) {}
 };
 
-exports.verifyPasswordResetLink = async (req, res, next) => {
+exports.verifyPasswordResetLink = async (req, res) => {
   console.log("=====>>>>>>> ", req.body);
   try {
     const username = req.body.username;

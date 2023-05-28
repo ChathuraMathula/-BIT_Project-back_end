@@ -173,7 +173,7 @@ router.post(
 router.post(
   "/reject/reservation",
   verifyToken,
-  reservationsController.removeReservation
+  reservationsController.rejectReservation
 );
 
 // POST /customer/send/reservation/payment/details

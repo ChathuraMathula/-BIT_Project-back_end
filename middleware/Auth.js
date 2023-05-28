@@ -7,6 +7,7 @@ exports.verifyToken = (req, res, next) => {
   const JWT_SECRET = authController.getJwtSecret();
 
   if (token) {
+    // verify token
     jwt.verify(token, JWT_SECRET, (error, authData) => {
       if (error) {
         return res.status(403).send(); // status code = forbidden if token is changed
