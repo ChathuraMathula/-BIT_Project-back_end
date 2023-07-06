@@ -13,6 +13,7 @@ const getRoutes = require("./routes/get");
 const postRoutes = require("./routes/post");
 const { Server } = require("socket.io");
 const { onTimeOutRemoveReservation } = require("./middleware/Reservation");
+const { exit } = require("process");
 
 onTimeOutRemoveReservation();
 
@@ -39,13 +40,20 @@ app.use(express.json()); // parse "application/json"
 app.use(getRoutes);
 app.use(postRoutes);
 
-database.connect(() => {
-  const server = app.listen(3001, () => {
-    console.log("server is listening on port 3001");
-  });
+try{
 
-  const io = require("./util/socket").init(server);
-  io.on("connection", (socket) => {
-    console.log("Client Connected");
+  database.connect(() => {
+    const server = app.listen(3001, () => {
+      console.log("\x1b[34mserver is listening on port 3001\x1b[0m");
+    });
+  
+    const io = require("./util/socket").init(server);
+    io.on("connection", (socket) => {
+      console.log("\x1b[34mClient Connected\x1b[0m");
+    });
   });
-});
+} catch(e) {
+  console.log("Cannot connect to the database")
+  console.log("Exiting process")
+  process.exit();
+}

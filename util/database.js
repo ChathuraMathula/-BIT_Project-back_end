@@ -14,13 +14,16 @@ let _db;
 exports.connect = (callback) => {
   MongoClient.connect(uri)
     .then((client) => {
-      console.log("Successfully connected to MongoDB");
+      console.log("\x1b[34mSuccessfully connected to MongoDB\x1b[0m");
       _db = client.db("date_reservation_system");
       callback();
     })
     .catch((error) => {
-      console.log(error);
-      throw error;
+      // console.log(error);
+      // throw error;
+      console.error("\x1b[33mCannot connect to the database\x1b[0m")
+      console.log("Exiting process")
+      process.exit();
     });
 };
 
@@ -31,7 +34,7 @@ exports.getDb = () => {
   if (_db) {
     return _db;
   }
-  throw "No Database Found !";
+  throw "\x1b[91mNo Database Found !\x1b[0m";
 };
 
 /**
@@ -50,11 +53,17 @@ exports.getCollection = async (
     },
   }
 ) => {
-  const db = this.getDb();
-  const documents = db.collection(collection);
-
-  const documentsArray = await documents.find(query, options).toArray();
-  return documentsArray;
+  try {
+    const db = this.getDb();
+    const documents = db.collection(collection);
+  
+    const documentsArray = await documents.find(query, options).toArray();
+    return documentsArray;
+  } catch (e) {
+    console.log(`${e} : Get Collection Failed`)
+    console.log("Exiting process")
+    process.exit();
+  }
 };
 
 
@@ -76,12 +85,18 @@ exports.getDocument = async (
     },
   }
 ) => {
-  const db = this.getDb();
-
-  const documents = db.collection(collection);
-
-  const document = await documents.findOne(query, options);
-  return document;
+  try {
+    const db = this.getDb();
+  
+    const documents = db.collection(collection);
+  
+    const document = await documents.findOne(query, options);
+    return document;
+  } catch (e) {
+      console.log(`${e} : Get Document Failed`)
+      console.log("Exiting process")
+      process.exit();
+  }
 };
 
 /**
@@ -91,12 +106,18 @@ exports.getDocument = async (
  * @returns A promise resolving the result of the insert operation
  */
 exports.postDocument = async (collection, document) => {
-  const db = this.getDb();
-
-  const collectionName = db.collection(collection);
-
-  const result = await collectionName.insertOne(document);
-  return result;
+  try {
+    const db = this.getDb();
+  
+    const collectionName = db.collection(collection);
+  
+    const result = await collectionName.insertOne(document);
+    return result;
+  } catch (e) {
+      console.log(`${e} : Post Document Failed`)
+      console.log("Exiting process")
+      process.exit();
+  }
 };
 
 /**
@@ -107,12 +128,18 @@ exports.postDocument = async (collection, document) => {
  * @returns A promise resolving the result of the update operation
  */
 exports.updateDocument = async (collection, filter, updateFilter) => {
-  const db = this.getDb();
-
-  const documents = db.collection(collection);
-
-  const result = await documents.updateOne(filter, updateFilter);
-  return result;
+  try {
+    const db = this.getDb();
+  
+    const documents = db.collection(collection);
+  
+    const result = await documents.updateOne(filter, updateFilter);
+    return result;
+  } catch (e) {
+      console.log(`${e} : Update Document Failed`)
+      console.log("Exiting process")
+      process.exit();
+  }
 };
 
 
@@ -123,12 +150,18 @@ exports.updateDocument = async (collection, filter, updateFilter) => {
  * @returns A promise resolving the result of the deleteMany operation
  */
 exports.deleteDocuments = async (collection, query) => {
-  const db = this.getDb();
-
-  const documents = db.collection(collection);
-
-  const result = await documents.deleteMany(query);
-  return result;
+  try {
+    const db = this.getDb();
+  
+    const documents = db.collection(collection);
+  
+    const result = await documents.deleteMany(query);
+    return result;
+  } catch (e) {
+      console.log(`${e} : Delete Documents Failed`)
+      console.log("Exiting process")
+      process.exit();
+  }
 };
 
 /**
@@ -138,10 +171,16 @@ exports.deleteDocuments = async (collection, query) => {
  * @returns A promise resolving the result of the deleteOne operation
  */
 exports.deleteDocument = async (collection, query) => {
-  const db = this.getDb();
-
-  const documents = db.collection(collection);
-
-  const result = await documents.deleteOne(query);
-  return result;
+  try {
+    const db = this.getDb();
+  
+    const documents = db.collection(collection);
+  
+    const result = await documents.deleteOne(query);
+    return result;
+  } catch (e) {
+        console.log(`${e} : Delete Document Failed`)
+        console.log("Exiting process")
+        process.exit();
+  }
 };
