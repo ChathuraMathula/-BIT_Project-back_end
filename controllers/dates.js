@@ -13,11 +13,10 @@ const { getIO } = require("../util/socket");
 exports.setAvailableDate = async (req, res, next) => {
   try {
     const date = req.body;
-    console.log(date);
 
     await saveAvailableDate(date)
       .then((result) => {
-        console.log(result);
+        
         if (result) {
           res.json({ success: true });
         } else {
@@ -105,7 +104,7 @@ exports.removeAvailableDate = async (req, res, next) => {
 
     await removeAvailableDate(thisYear, thisMonth, thisDay)
       .then((result) => {
-        console.log("<<<>>>>", result);
+        
         if (result) {
           res.json({ success: true });
         } else {
