@@ -391,7 +391,7 @@ exports.confirmReservation = async (req, res, next) => {
               const emailObject = {
                 subject: "Reservation Successful",
                 sender: {
-                  email: "admin@reserveu.com",
+                  email: "admin@dilshaphotography.com",
                 },
                 to: [
                   {
@@ -452,7 +452,7 @@ exports.getReservationPaymentSlipPhoto = async (req, res, next) => {
     });
   } catch (error) {
     if (error) {
-      console.log("Pyment Slip Photo Error: ", error);
+      console.log(error);
       fs.readFile(
         path.join(
           __dirname,

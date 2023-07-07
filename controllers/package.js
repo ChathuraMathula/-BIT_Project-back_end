@@ -110,10 +110,7 @@ exports.addNewPackage = async (req, res, next) => {
       io.emit("packageCategories", categories);
     });
   } catch (error) {
-    console.log(
-      "package.js : addNewPackage() ERROR: (Inside Catch Block)",
-      error
-    );
+    console.log(error);
     res.status(400).json({ error: "Sorry...! 😟 Failed to add your package." });
   }
 };
@@ -132,7 +129,7 @@ exports.getPackageCategories = async (req, res, next) => {
     })
     .catch((error) => {
       if (error) {
-        console.log("getPackageCategories Error: ", error);
+        console.log(error);
         res.status(400).json({ error: "Not Found" });
       }
     });
@@ -188,10 +185,7 @@ exports.updatePackage = async (req, res, next) => {
       io.emit("packageCategories", categories);
     });
   } catch (error) {
-    console.log(
-      "package.js : updatePackage() ERROR: (Inside Catch Block)",
-      error
-    );
+    console.log(error);
     res
       .status(400)
       .json({ error: "Sorry...! 😟 Failed to update your package." });
@@ -250,10 +244,7 @@ exports.removePackage = async (req, res, next) => {
       io.emit("packageCategories", categories);
     });
   } catch (error) {
-    console.log(
-      "package.js : removePackage() ERROR: (Inside Catch Block)",
-      error
-    );
+    console.log(error);
     res
       .status(400)
       .json({ error: "Sorry...! 😟 Failed to remove your package." });
