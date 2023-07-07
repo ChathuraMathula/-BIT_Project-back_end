@@ -1,7 +1,7 @@
 const SibApiV3Sdk = require("sib-api-v3-sdk");
 
 const API_KEY =
-  "xsmtpsib-1f1e8088f869f6e7f600bf3819e3375f4dd354d6b10437eb97e47041d4d75a56-6aQd472CIkypmSVc";
+  "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";
 
 /**
    * 
@@ -16,14 +16,20 @@ const API_KEY =
   'params' : {'bodyMessage':'Made just for you!'}
   } 
  */
-exports.sendTransactionEmail = (emailObject) => {
+exports.sendTransactionEmail = (emailObject, req) => {
+  
+  req.headers['api-key'] = API_KEY;
+  req.headers['content-type'] = "application/json";
+  req.headers['accept'] = "application/json";
+  
   SibApiV3Sdk.ApiClient.instance.authentications["api-key"].apiKey = API_KEY;
+
   new SibApiV3Sdk.TransactionalEmailsApi().sendTransacEmail(emailObject).then(
     (data) => {
       console.log(data);
     },
     (error) => {
-      console.error(error);
+      // console.error(error);
     }
   );
 

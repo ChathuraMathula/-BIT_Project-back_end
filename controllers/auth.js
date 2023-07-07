@@ -105,21 +105,15 @@ exports.sendPasswordResetLink = async (req, res) => {
 
       const htmlContent = `
       <html lang="en">
-
-      <head>
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      </head>
-
-      <body style="min-height: 100vh; display: flex; flex-direction: column;">
-          <div style="box-shadow: 0 5px 8px 8px rgb(204, 204, 204);">
+      <body style="color: rgb(0, 0, 0);">
+          <div style="box-shadow: 0 5px 8px 8px rgb(204, 204, 204); color: rgb(0, 0, 0);">
               <h2 style="margin: 0.3rem auto; text-align: center;">Dilsha Photography</h2>
               <h3 style="margin: 0.3rem auto; text-align: center;">Reset Password</h3>
           </div>
 
           <br>
 
-          <main style="padding: 1rem;">
+          <main style="padding: 1rem; color: rgb(0, 0, 0);">
 
               <p>Hi ${user.username},</p>
               <br>
@@ -128,9 +122,11 @@ exports.sendPasswordResetLink = async (req, res) => {
               <br>
               <div>
                   <p>To reset your password, click the button below:</p>
-                  <button style="padding: 0.3rem; cursor: pointer;">
-                      Reset Password
-                  </button>
+                  <a href="${link}">
+                    <button style="padding: 0.3rem; cursor: pointer;">
+                        Reset Password
+                    </button>
+                  </a>
               </div>
               <br>
               <div>
@@ -161,7 +157,7 @@ exports.sendPasswordResetLink = async (req, res) => {
         htmlContent: htmlContent,
       };
 
-      sendTransactionEmail(emailObject);
+      sendTransactionEmail(emailObject, req);
 
       return;
     }
