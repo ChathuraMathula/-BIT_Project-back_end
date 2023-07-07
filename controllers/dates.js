@@ -25,7 +25,7 @@ exports.setAvailableDate = async (req, res, next) => {
         }
       })
       .catch((error) => {
-        console.log("Set Available Date: ERROR: ", error);
+        ("Set Available Date: ERROR: ", error);
         res.status(400).json({ success: false });
       });
 
@@ -34,7 +34,7 @@ exports.setAvailableDate = async (req, res, next) => {
       io.emit("dates", dates);
     });
   } catch (error) {
-    console.log("Set Available Date: ERROR: (inside catch block): ", error);
+    console.log(error);
     res.status(400).json({ success: false });
   }
 };
@@ -53,11 +53,11 @@ exports.getAvailableDates = async (req, res, next) => {
         }
       })
       .catch((error) => {
-        console.log("get available dates : ERROR: ", error);
+        console.log(error);
         res.status(400).send();
       });
   } catch (error) {
-    console.log("get available dates : ERROR: (inside catch block) ", error);
+    console.log(error);
     res.status(400).send();
   }
 };
@@ -80,7 +80,7 @@ exports.getAvailableDate = async (req, res, next) => {
         }
       })
       .catch((error) => {
-        console.log("get available date : ERROR: ", error);
+        console.log(error);
         res.status(400).send();
       });
 
@@ -89,7 +89,7 @@ exports.getAvailableDate = async (req, res, next) => {
       io.emit("dates", dates);
     });
   } catch (error) {
-    console.log("get available date : ERROR: (inside catch block) ", error);
+    console.log(error);
     res.status(400).send();
   }
 };
@@ -113,7 +113,7 @@ exports.removeAvailableDate = async (req, res, next) => {
         }
       })
       .catch((error) => {
-        console.log("Set Available Date: ERROR: ", error);
+        console.log(error);
         res.status(400).json({ success: false });
       });
 
@@ -122,7 +122,7 @@ exports.removeAvailableDate = async (req, res, next) => {
       io.emit("dates", dates);
     });
   } catch (error) {
-    console.log("Set Available Date: ERROR: ", error);
+    console.log(error);
     res.status(400).json({ success: false });
   }
 };

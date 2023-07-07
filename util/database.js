@@ -3,7 +3,7 @@ const mongodb = require("mongodb");
 const MongoClient = mongodb.MongoClient;
 
 const uri =
-  "mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+1.6.1";
+  "mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=3000&appName=mongosh+1.6.1";
 
 let _db;
 

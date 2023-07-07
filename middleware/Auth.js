@@ -13,7 +13,7 @@ exports.verifyToken = (req, res, next) => {
         return res.status(403).send(); // status code = forbidden if token is changed
       } else {
         req.authData = authData;
-        console.log("token verified");
+        console.log("Token is verified");
       }
     });
   } else {

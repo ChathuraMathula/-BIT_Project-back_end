@@ -23,7 +23,7 @@ exports.sendTransactionEmail = (emailObject) => {
       console.log(data);
     },
     (error) => {
-      console.error("------>", error);
+      console.error(error);
     }
   );
 };

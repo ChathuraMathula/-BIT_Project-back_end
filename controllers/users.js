@@ -123,7 +123,7 @@ exports.getUserProfilePic = async (req, res) => {
     });
   } catch (error) {
     if (error) {
-      console.log("Profile Picture Error: ", error);
+      console.log(error);
       fs.readFile(
         path.join(
           __dirname,
@@ -153,7 +153,7 @@ exports.getVerifiedUser = (req, res) => {
     })
     .catch((error) => {
       if (error) {
-        console.log("Get Verified User - ERROR: ", error);
+        console.log(error);
         res.status(401).send();
       }
     });
@@ -454,7 +454,7 @@ exports.getPhotographerProfilePicure = async (req, res) => {
     });
   } catch (error) {
     if (error) {
-      console.log("Profile Picture Error: ", error);
+      console.log(error);
       fs.readFile(
         path.join(
           __dirname,

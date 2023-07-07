@@ -17,7 +17,7 @@ exports.uploadPortfolioImages = (req, res, next) => {
         const io = getIO();
         io.emit("portfolio", images);
       } else {
-        console.log("portfolio images upload error: ", error);
+        console.log(error);
       }
     });
   }

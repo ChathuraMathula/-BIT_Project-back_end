@@ -64,7 +64,7 @@ exports.login = async (req, res) => {
     })
     .catch((error) => {
       if (error) {
-        console.log("Login Error", error);
+        
         if (error === "error") {
           res.status(401).json({
             error:
@@ -120,7 +120,7 @@ exports.sendPasswordResetLink = async (req, res) => {
       const emailObject = {
         subject: "Reset password link",
         sender: {
-          email: "admin@reserveu.com",
+          email: "admin@dilshaphotography.com",
         },
         to: [{ name: `${user.firstname} ${user.lastname}`, email: user.email }],
         htmlContent: htmlContent,
@@ -134,7 +134,7 @@ exports.sendPasswordResetLink = async (req, res) => {
 };
 
 exports.verifyPasswordResetLink = async (req, res) => {
-  console.log("=====>>>>>>> ", req.body);
+  
   try {
     const username = req.body.username;
     const token = req.body.token;
@@ -147,9 +147,14 @@ exports.verifyPasswordResetLink = async (req, res) => {
     }
     const secret = JWT_SECRET + user.password;
     const verifiedToken = jwt.verify(token, secret);
-    console.log(verifiedToken);
     if (verifiedToken) {
       return res.status(200).json({ success: true });
+    } else {
+      return res.status(403).send(); // status code = forbidden if token is changed
     }
-  } catch (error) {}
+  } catch (error) {
+    if (error) {
+      return res.status(403).send(); // status code = forbidden if token is changed
+    }
+  }
 };
