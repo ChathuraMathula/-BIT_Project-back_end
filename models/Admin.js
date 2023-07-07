@@ -28,7 +28,6 @@ class Admin {
 
   static async updatePasswd(new_passwd) {
     const db = getDb();
-    console.log(new_passwd);
 
     const filter = { role: "admin" };
     const updateDocument = {
@@ -38,7 +37,6 @@ class Admin {
     };
     
     const adminObj = await db.collection('users').updateOne(filter, updateDocument);
-    console.log(adminObj);
     return adminObj;
   }
 }

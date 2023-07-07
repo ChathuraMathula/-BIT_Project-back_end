@@ -48,7 +48,6 @@ class Customer {
    * returns a promise if the doucument is succussfully stored
    **/
   async save() {
-    console.log(this)
     if (!this.isValidCustomer()) {
       return Promise.reject("invalidCustomerData");
     } else {

@@ -53,7 +53,6 @@ exports.signup = async (req, res) => {
         password: await toHashPassword(password),
         role: "customer",
       };
-      console.log("----------->> ", req.file?.fieldname === "image");
 
       if (req.file?.fieldname === "image") {
         user.image = {
@@ -148,7 +147,6 @@ exports.getUserProfilePic = async (req, res) => {
 exports.getVerifiedUser = (req, res) => {
   Users.fetchUser({ username: req.authData.username })
     .then((user) => {
-      console.log("get verified user ", user);
       res.status(200).json(user);
     })
     .catch((error) => {
@@ -303,8 +301,7 @@ exports.updateUserPassword = async (req, res) => {
         .catch((error) => {
           if (error) return false;
         });
-
-      console.log("___-----> ", isPasswordCorrect);
+        
 
       if (isPasswordCorrect) {
         const filter = { username: username };
@@ -385,7 +382,7 @@ exports.removeUserImage = async (req, res) => {
       `${username}.jpeg`
     );
 
-    console.log(">>>>>>>>>>>> ", removeImage);
+    
     if (removeImage) {
       fs.unlink(filePath, (error) => {
         if (error) {

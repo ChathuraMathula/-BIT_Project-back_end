@@ -14,7 +14,7 @@ const { getIO } = require("../util/socket");
 const { isValid } = require("../util/validator");
 
 exports.addNewPackage = async (req, res, next) => {
-  console.log(req.body);
+  
   try {
     const category = sanitize(req.body.category.trim());
     const package = sanitize(req.body.package.trim());
@@ -32,7 +32,7 @@ exports.addNewPackage = async (req, res, next) => {
           .then((categories) => {
             for (let categoryName of categories) {
               if (categoryName.name === category) {
-                console.log(categoryName, category);
+                
                 const packageDocuments = categoryName.packages;
                 if (
                   packageDocuments.some(
@@ -48,7 +48,7 @@ exports.addNewPackage = async (req, res, next) => {
             return false;
           })
           .then((isExistingCategory) => {
-            console.log(isExistingCategory);
+            
             if (isExistingCategory) {
               return savePackage(category, {
                 name: package,
@@ -83,7 +83,7 @@ exports.addNewPackage = async (req, res, next) => {
           })
           .catch((error) => {
             if (error) {
-              console.log("package.js : addNewPackage() ERROR: ", error);
+              console.log(error);
               if (error === "existingPackage") {
                 res.status(400).json({ error: "Existing package. 😈" });
               } else {
@@ -206,10 +206,10 @@ exports.removePackage = async (req, res, next) => {
           name: package,
         })
           .then((result) => {
-            console.log(result);
+            
             if (result) {
               removeEmptyPackageCategories().then((result) => {
-                console.log("+----------> ", result);
+                
                 fetchPackageCategories().then((categories) => {
                   if (categories) {
                     res
@@ -257,7 +257,7 @@ exports.addCategoryExtraServices = async (req, res, next) => {
     const extraServices = req.body.extraServices;
 
     if (category && extraServices) {
-      console.log(category, extraServices);
+      
       const updateFilter = {
         $set: {
           extraServices: extraServices.length > 0 ? extraServices : [],

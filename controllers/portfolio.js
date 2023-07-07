@@ -13,7 +13,7 @@ exports.uploadPortfolioImages = (req, res, next) => {
         files.forEach((file) => {
           images.push(file);
         });
-        console.log(images);
+        
         const io = getIO();
         io.emit("portfolio", images);
       } else {
@@ -60,7 +60,7 @@ exports.removePortfolioImage = (req, res, next) => {
               files.forEach((file) => {
                 images.push(file);
               });
-              console.log(images);
+              
               const io = getIO();
               io.emit("portfolio", images);
             } else {

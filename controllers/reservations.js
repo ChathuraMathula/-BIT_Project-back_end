@@ -22,7 +22,7 @@ exports.setNewReservation = async (req, res, next) => {
     let reservation = req.body.reservation;
     reservation.customer = username;
     reservation.state = "pending";
-    console.log(reservation.category);
+    
 
     await fetchPackageCategories()
       .then((categories) => {
@@ -33,7 +33,7 @@ exports.setNewReservation = async (req, res, next) => {
         }
       })
       .then((packageCategoryDocument) => {
-        console.log(packageCategoryDocument);
+        
         const packages = packageCategoryDocument.packages;
         for (let package of packages) {
           if (package.name === reservation.package) {
@@ -77,7 +77,7 @@ exports.setNewReservation = async (req, res, next) => {
 };
 
 exports.addPhotographerPaymentDetails = async (req, res, next) => {
-  console.log(req.body);
+  
   try {
     const { date: date, costs: costs, message: message } = req.body;
 
@@ -115,7 +115,7 @@ exports.addPhotographerPaymentDetails = async (req, res, next) => {
 };
 
 exports.rejectReservation = async (req, res, next) => {
-  console.log("Rejecte Reservation: ---> ", req.body);
+  
   try {
     const { date: date, customer: customer, message: message } = req.body;
 
@@ -126,7 +126,6 @@ exports.rejectReservation = async (req, res, next) => {
       };
       await updateReservation(date.year, date.month, date.day, updateFilter)
         .then((result) => {
-          console.log("REJECTED: ", result)
           if (result) {
             res.status(200).json({ success: true });
           } else {
@@ -148,7 +147,7 @@ exports.rejectReservation = async (req, res, next) => {
 };
 
 exports.removeReservation = async (req, res, next) => {
-  console.log("Remove Reservation: ---> ", req.body);
+  
   try {
     const { date: date } = req.body;
 
@@ -178,7 +177,7 @@ exports.removeReservation = async (req, res, next) => {
 };
 
 exports.updateAdminReservation = async (req, res, next) => {
-  console.log(req.body);
+  
   try {
     const {
       date: date,
@@ -244,7 +243,6 @@ exports.updateAdminReservation = async (req, res, next) => {
 };
 
 exports.addCustomerPaymentDetails = async (req, res, next) => {
-  console.log(req.body);
   try {
     const {
       year: year,
@@ -281,11 +279,10 @@ exports.addCustomerPaymentDetails = async (req, res, next) => {
             "reservation.startsAt": null,
           },
         };
-        console.log(updateFilter);
+        
 
         await updateReservation(+year, +month, +day, updateFilter)
           .then((result) => {
-            console.log(result);
             if (result.modifiedCount > 0) {
               res.status(200).json({ success: true });
             } else {
@@ -357,13 +354,11 @@ exports.confirmReservation = async (req, res, next) => {
     };
     await updateReservation(+date.year, +date.month, +date.day, updateFilter)
       .then((result) => {
-        console.log(result);
         if (result.modifiedCount > 0) {
           res.status(200).json({ success: true });
 
           fetchAvailableDate(date.year, date.month, date.day)
             .then((confirmedDate) => {
-              console.log("=====++++>>> ", confirmedDate);
               return confirmedDate.reservation.customer;
             })
             .then((customerName) => {
@@ -372,7 +367,6 @@ exports.confirmReservation = async (req, res, next) => {
               return fetchUser(query, options);
             })
             .then((customerDocument) => {
-              console.log(customerDocument);
               const email = customerDocument.email;
               const firstname = customerDocument.firstname;
               const lastname = customerDocument.lastname;
@@ -401,7 +395,6 @@ exports.confirmReservation = async (req, res, next) => {
                 ],
                 htmlContent: htmlContent,
               };
-              console.log(emailObject);
               sendTransactionEmail(emailObject);
             });
         } else {

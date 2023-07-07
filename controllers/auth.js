@@ -76,8 +76,6 @@ exports.login = async (req, res) => {
 };
 
 exports.logout = (req, res) => {
-  console.log("logout: ", req.body);
-  console.log("logout authData.username: ", req.authData.username);
   if (req.authData.username) {
     res.status(200).clearCookie("token").send();
   } else {
@@ -103,7 +101,6 @@ exports.sendPasswordResetLink = async (req, res) => {
     );
 
     const link = `http://localhost:3000/reset/password/${user.username}/${token}`;
-    console.log(link);
     if (link) {
       res.status(200).json({ success: true });
 
@@ -125,7 +122,6 @@ exports.sendPasswordResetLink = async (req, res) => {
         to: [{ name: `${user.firstname} ${user.lastname}`, email: user.email }],
         htmlContent: htmlContent,
       };
-      console.log(emailObject);
       sendTransactionEmail(emailObject);
 
       return;
