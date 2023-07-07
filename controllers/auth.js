@@ -50,7 +50,7 @@ exports.login = async (req, res) => {
           .status(200)
           .cookie("token", jwtToken, {
             httpOnly: true,
-            expires: new Date(Date.now() + (1000 * 60 * 60 * 24)),
+            expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
           })
           .json({
             user: {
@@ -64,7 +64,6 @@ exports.login = async (req, res) => {
     })
     .catch((error) => {
       if (error) {
-        
         if (error === "error") {
           res.status(401).json({
             error:
@@ -105,12 +104,48 @@ exports.sendPasswordResetLink = async (req, res) => {
       res.status(200).json({ success: true });
 
       const htmlContent = `
-      <html>
-        <body>
-          <h1>Reset Password</h1>
-          <p>Please click the link below to reset your account password 😊</p>
-          <a href=${link}>Click Here</a>
-        </body>
+      <html lang="en">
+
+      <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      </head>
+
+      <body style="min-height: 100vh; display: flex; flex-direction: column;">
+          <div style="box-shadow: 0 5px 8px 8px rgb(204, 204, 204);">
+              <h2 style="margin: 0.3rem auto; text-align: center;">Dilsha Photography</h2>
+              <h3 style="margin: 0.3rem auto; text-align: center;">Reset Password</h3>
+          </div>
+
+          <br>
+
+          <main style="padding: 1rem;">
+
+              <p>Hi ${user.username},</p>
+              <br>
+              <p>Forgot your password?</p>
+              <p>We recieved a request to reset the password for your account</p>
+              <br>
+              <div>
+                  <p>To reset your password, click the button below:</p>
+                  <button style="padding: 0.3rem; cursor: pointer;">
+                      Reset Password
+                  </button>
+              </div>
+              <br>
+              <div>
+                  <p>Or, copy and paste the URL into your browser:</p>
+                  <a href="${link}">${link}</a>
+              </div>
+
+          </main>
+
+          <footer style="text-align: center; margin-top: 1.2rem; padding: 0.3rem; color: rgb(91, 91, 91);">
+              <p>You recieved this email, because you just requested to reset your password.</p>
+              <p>&copy; 2023 | Dilsha Photography</p>
+          </footer>
+      </body>
+
       </html>
       `;
 
@@ -120,17 +155,22 @@ exports.sendPasswordResetLink = async (req, res) => {
           email: "admin@dilshaphotography.com",
         },
         to: [{ name: `${user.firstname} ${user.lastname}`, email: user.email }],
+        replyTo: {
+          email: "admin@dilshaphotography.com",
+        },
         htmlContent: htmlContent,
       };
+
       sendTransactionEmail(emailObject);
 
       return;
     }
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 exports.verifyPasswordResetLink = async (req, res) => {
-  
   try {
     const username = req.body.username;
     const token = req.body.token;
